@@ -92,12 +92,12 @@ I'm a developer from **Argentina** 🇦🇷 who enjoys programming, technology, 
 ```text
 ╭─────────────────────────────────────────────╮
 │                                             │
-│  🖥️  PC          → YOUR PC                 │
-│  ⚡ CPU          → YOUR CPU                 │
-│  🎮 GPU          → YOUR GPU                 │
-│  🧠 RAM          → YOUR RAM                 │
-│  💾 Storage      → YOUR STORAGE             │
-│  🪟 OS           → Windows / Linux          │
+│  🖥️  PC          → Government Netbook       │
+│  ⚡ CPU          → Intel Celeron N4020      │
+│  🎮 GPU          → Intel UHD 600            │
+│  🧠 RAM          → 4GB                      │
+│  💾 Storage      → 240 GB                   │
+│  🪟 OS           → Windows / Linux           │
 │                                             │
 ╰─────────────────────────────────────────────╯
 ```
