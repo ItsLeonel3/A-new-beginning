@@ -1,5 +1,5 @@
-# A new beginning
-We’re kicking off 2026. New changes, new creations from Argentina.
+# A New Beginning
+2026. New changes, new vibes, more programming.
 
 <!-- BANNER -->
 
@@ -126,10 +126,6 @@ I'm a developer from **Argentina** 🇦🇷 who enjoys programming, technology, 
 
 <a href="https://github.com/leobay23">
 <img src="https://img.shields.io/badge/GitHub-0D1117?style=for-the-badge&logo=github&logoColor=00FFFF"/>
-</a>
-
-<a href="https://discord.com/">
-<img src="https://img.shields.io/badge/Discord-0D1117?style=for-the-badge&logo=discord&logoColor=7289DA"/>
 </a>
 
 <a href="https://instagram.com/leobay_cars">
