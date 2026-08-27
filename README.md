@@ -1,2 +1,149 @@
-# A-new-beginning
+# A new beginning
 We’re kicking off 2026. New changes, new creations from Argentina.
+
+<!-- BANNER -->
+
+<p align="center">
+  <img src="https://capsule-render.vercel.app/api?type=waving&color=0:00ffff,50:ff00ff,100:00ff88&height=200&section=header&text=TU_NOMBRE&fontSize=50&fontColor=ffffff&animation=twinkling&fontAlignY=35" width="100%"/>
+</p>
+
+<h3 align="center">
+  <img src="https://readme-typing-svg.demolab.com?font=JetBrains+Mono&size=22&duration=2500&pause=700&color=00FFFF&center=true&vCenter=true&width=650&lines=Hey%2C+I'm+TU_NOMBRE+%F0%9F%91%BE;Developer+%7C+Gamer+%7C+Tech+Enthusiast;Welcome+to+my+GitHub+%E2%9A%A1" />
+</h3>
+
+<p align="center">
+  <img src="https://komarev.com/ghpvc/?username=TU_USUARIO&style=for-the-badge&color=00ffff&label=PROFILE+VIEWS"/>
+</p>
+
+---
+
+# 👾 About Me
+
+<p align="center">
+  <i>
+    "Code, learn, experiment and repeat."
+  </i>
+</p>
+
+I'm a developer from **Argentina** 🇦🇷 who enjoys programming, technology, gaming and experimenting with different projects.
+
+### ⚡ A little about me
+
+* 💻 Programming & technology
+* 🎮 Gaming
+* 🧠 Learning new things
+* 🔧 Hardware & software
+* 🚀 Building personal projects
+* 🌐 Exploring the world of open source
+
+---
+
+# 🧠 Tech Stack
+
+### 💻 Languages
+
+<p align="center">
+  <img src="https://skillicons.dev/icons?i=python,js,ts,html,css,cpp,java" />
+</p>
+
+### ⚙️ Tools
+
+<p align="center">
+  <img src="https://skillicons.dev/icons?i=git,github,vscode,linux,windows,arduino,nodejs" />
+</p>
+
+---
+
+# 📊 GitHub Stats
+
+<p align="center">
+  <img src="https://github-readme-stats.vercel.app/api?username=TU_USUARIO&show_icons=true&theme=tokyonight&hide_border=true&bg_color=0D1117&title_color=00FFFF&icon_color=FF00FF&text_color=FFFFFF" height="180"/>
+  <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=TU_USUARIO&layout=compact&theme=tokyonight&hide_border=true&bg_color=0D1117&title_color=00FFFF&text_color=FFFFFF" height="180"/>
+</p>
+
+<p align="center">
+  <img src="https://github-readme-streak-stats.herokuapp.com/?user=TU_USUARIO&theme=tokyonight&hide_border=true&background=0D1117&ring=00FFFF&fire=FF00FF&currStreakLabel=00FFFF" />
+</p>
+
+---
+
+# 📈 Contribution Graph
+
+<p align="center">
+  <img src="https://github-readme-activity-graph.vercel.app/graph?username=TU_USUARIO&bg_color=0D1117&color=00FFFF&line=FF00FF&point=FFFFFF&area=true&hide_border=true" width="95%"/>
+</p>
+
+---
+
+# 🎮 Gaming
+
+<p align="center">
+
+<img src="https://img.shields.io/badge/Counter--Strike-00FFFF?style=for-the-badge&logo=counterstrike&logoColor=white"/>
+<img src="https://img.shields.io/badge/Minecraft-00FF88?style=for-the-badge&logo=minecraft&logoColor=white"/>
+<img src="https://img.shields.io/badge/PC_Gaming-FF00FF?style=for-the-badge&logo=steam&logoColor=white"/>
+
+</p>
+
+---
+
+# 🖥️ Setup
+
+```text
+╭─────────────────────────────────────────────╮
+│                                             │
+│  🖥️  PC          → YOUR PC                 │
+│  ⚡ CPU          → YOUR CPU                 │
+│  🎮 GPU          → YOUR GPU                 │
+│  🧠 RAM          → YOUR RAM                 │
+│  💾 Storage      → YOUR STORAGE             │
+│  🪟 OS           → Windows / Linux          │
+│                                             │
+╰─────────────────────────────────────────────╯
+```
+
+---
+
+# 🚀 Projects
+
+<p align="center">
+
+<a href="https://github.com/TU_USUARIO">
+  <img src="https://github-readme-stats.vercel.app/api/pin/?username=TU_USUARIO&repo=REPOSITORIO_1&theme=tokyonight&hide_border=true&bg_color=0D1117"/>
+</a>
+
+<a href="https://github.com/TU_USUARIO">
+  <img src="https://github-readme-stats.vercel.app/api/pin/?username=TU_USUARIO&repo=REPOSITORIO_2&theme=tokyonight&hide_border=true&bg_color=0D1117"/>
+</a>
+
+</p>
+
+---
+
+# 🌐 Socials
+
+<p align="center">
+
+<a href="https://github.com/TU_USUARIO">
+<img src="https://img.shields.io/badge/GitHub-0D1117?style=for-the-badge&logo=github&logoColor=00FFFF"/>
+</a>
+
+<a href="https://discord.com/">
+<img src="https://img.shields.io/badge/Discord-0D1117?style=for-the-badge&logo=discord&logoColor=7289DA"/>
+</a>
+
+<a href="https://instagram.com/">
+<img src="https://img.shields.io/badge/Instagram-0D1117?style=for-the-badge&logo=instagram&logoColor=FF00FF"/>
+</a>
+
+</p>
+
+---
+
+<p align="center">
+
+### ⚡ Thanks for visiting my profile ⚡
+
+<img src="https://capsule-render.vercel.app/api?type=waving&color=0:00ffff,50:ff00ff,100:00ff88&height=120&section=footer"/>
+
+</p>
