@@ -108,12 +108,12 @@ I'm a developer from **Argentina** 🇦🇷 who enjoys programming, technology, 
 
 <p align="center">
 
-<a href="https://github.com/TU_USUARIO">
-  <img src="https://github-readme-stats.vercel.app/api/pin/?username=TU_USUARIO&repo=REPOSITORIO_1&theme=tokyonight&hide_border=true&bg_color=0D1117"/>
+<a href="https://github.com/leobay23">
+  <img src="https://github-readme-stats.vercel.app/api/pin/?username=leobay23&repo=REPOSITORIO_1&theme=tokyonight&hide_border=true&bg_color=0D1117"/>
 </a>
 
-<a href="https://github.com/TU_USUARIO">
-  <img src="https://github-readme-stats.vercel.app/api/pin/?username=TU_USUARIO&repo=REPOSITORIO_2&theme=tokyonight&hide_border=true&bg_color=0D1117"/>
+<a href="https://github.com/leobay23">
+  <img src="https://github-readme-stats.vercel.app/api/pin/?username=leobay23&repo=REPOSITORIO_2&theme=tokyonight&hide_border=true&bg_color=0D1117"/>
 </a>
 
 </p>
@@ -124,7 +124,7 @@ I'm a developer from **Argentina** 🇦🇷 who enjoys programming, technology, 
 
 <p align="center">
 
-<a href="https://github.com/TU_USUARIO">
+<a href="https://github.com/leobay23">
 <img src="https://img.shields.io/badge/GitHub-0D1117?style=for-the-badge&logo=github&logoColor=00FFFF"/>
 </a>
 
@@ -132,7 +132,7 @@ I'm a developer from **Argentina** 🇦🇷 who enjoys programming, technology, 
 <img src="https://img.shields.io/badge/Discord-0D1117?style=for-the-badge&logo=discord&logoColor=7289DA"/>
 </a>
 
-<a href="https://instagram.com/">
+<a href="https://instagram.com/leobay_cars">
 <img src="https://img.shields.io/badge/Instagram-0D1117?style=for-the-badge&logo=instagram&logoColor=FF00FF"/>
 </a>
 
