@@ -8,7 +8,7 @@ We’re kicking off 2026. New changes, new creations from Argentina.
 </p>
 
 <h3 align="center">
-  <img src="https://readme-typing-svg.demolab.com?font=JetBrains+Mono&size=22&duration=2500&pause=700&color=00FFFF&center=true&vCenter=true&width=650&lines=Hey%2C+I'm+Leonel+%F0%9F%91%BE;Developer+%7C+Gamer+%7C+Tech+Enthusiast;Welcome+to+my+GitHub+%E2%9A%A1" />
+  <img src="https://readme-typing-svg.demolab.com?font=JetBrains+Mono&size=22&duration=2500&pause=700&color=00FFFF&center=true&vCenter=true&width=650&lines=Hey%2C+I'm+Leonel+%F0%9F%91%BE;Developer+%7C+Gamer+%7C+Tech+Enthusiast;Welcome+to+my+GitHub" />
 </h3>
 
 <p align="center">
