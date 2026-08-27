@@ -106,13 +106,7 @@ I'm a developer from **Argentina** 🇦🇷 who enjoys programming, technology, 
 
 <p align="center">
 
-<a href="https://github.com/leobay23">
-  <img src="https://github-readme-stats.vercel.app/api/pin/?username=leobay23&repo=REPOSITORIO_1&theme=tokyonight&hide_border=true&bg_color=0D1117"/>
-</a>
-
-<a href="https://github.com/leobay23">
-  <img src="https://github-readme-stats.vercel.app/api/pin/?username=leobay23&repo=REPOSITORIO_2&theme=tokyonight&hide_border=true&bg_color=0D1117"/>
-</a>
+Cooming
 
 </p>
 
