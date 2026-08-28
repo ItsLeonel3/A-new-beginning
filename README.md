@@ -103,11 +103,10 @@ Cooming
 <p align="center">
 
 <a href="https://github.com/leobay23">
-<img src="https://img.shields.io/badge/GitHub-0D1117?style=for-the-badge&logo=github&logoColor=00FFFF"/>
+ <img src="https://img.shields.io/badge/GitHub-0D1117?style=for-the-badge&logo=github&logoColor=00FFFF"/>
 </a>
-<--->
 <a href="https://instagram.com/leobay_cars">
-<img src="https://img.shields.io/badge/Instagram-0D1117?style=for-the-badge&logo=instagram&logoColor=FF00FF"/>
+ <img src="https://img.shields.io/badge/Instagram-0D1117?style=for-the-badge&logo=instagram&logoColor=FF00FF"/>
 </a>
 
 </p>
