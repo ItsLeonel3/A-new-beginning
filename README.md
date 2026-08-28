@@ -67,9 +67,8 @@ I'm a developer from **Argentina** 🇦🇷 who enjoys programming, technology, 
 
 <p align="center">
 
-<img src="https://img.shields.io/badge/Counter--Strike-00FFFF?style=for-the-badge&logo=counterstrike&logoColor=white"/>
-<img src="https://img.shields.io/badge/Minecraft-00FF88?style=for-the-badge&logo=minecraft&logoColor=white"/>
-
+  <img src="https://img.shields.io/badge/COUNTER--STRIKE-FF0000?style=for-the-badge&logo=counterstrike&logoColor=FFFFFF"/>
+  <img src="https://img.shields.io/badge/MINECRAFT-00FF66?style=for-the-badge&logo=minecraft&logoColor=FFFFFF"/>
 </p>
 
 ---
