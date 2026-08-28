@@ -12,7 +12,7 @@
 </h3>
 
 <p align="center">
-  <img src="https://komarev.com/ghpvc/?username=Leobay23&style=for-the-badge&color=00ffff&label=PROFILE+VIEWS"/>
+  <img src="https://komarev.com/ghpvc/?username=Leobay23&style=for-the-badge&color=FF0000&label=PROFILE+VIEWS"/>
 </p>
 
 ---
