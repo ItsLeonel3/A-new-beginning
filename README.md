@@ -117,4 +117,3 @@ Cooming
 <img src="https://capsule-render.vercel.app/api?type=waving&color=0:00ffff,50:ff00ff,100:00ff88&height=120&section=footer"/>
 
 </p>
-Compatible con GitHub Pages. El LEOBAY PLAYER original es una aplicación Windows; la herramienta web incluida es una demo independiente para reproducir archivos locales en el navegador.
