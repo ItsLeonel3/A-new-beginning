@@ -4,7 +4,7 @@
 <!-- BANNER -->
 
 <p align="center">
-  <img src="https://capsule-render.vercel.app/api?type=waving&color=0:00ffff,50:ff00ff,100:00ff88&height=200&section=header&text=My README&fontSize=50&fontColor=ffffff&animation=twinkling&fontAlignY=35" width="100%"/>
+  <img src="https://capsule-render.vercel.app/api?type=waving&color=0:00ffff,50:ff00ff,100:00ff88&height=200&section=header&text=My-README&fontSize=50&fontColor=ffffff&animation=twinkling&fontAlignY=35" width="100%"/>
 </p>
 
 <h3 align="center">
