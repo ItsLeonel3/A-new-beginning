@@ -58,7 +58,7 @@ I'm a developer from **Argentina** 🇦🇷 who enjoys programming, technology, 
 # 📊 GitHub Stats
 
 <p align="center">
-  <img src="https://streak-stats.demolab.com/?user=leobay23&theme=tokyonight&hide_border=true&background=0D1117&ring=00FFFF&fire=FF00FF&currStreakLabel=00FFFF" />
+  <img src="https://streak-stats.demolab.com/?user=leobay23&theme=dark&hide_border=false&background=0D1117&ring=FFFFFF&fire=FF8C00&currStreakLabel=FFFFFF&currStreakNum=FFFFFF&sideLabels=FFFFFF&sideNums=FFFFFF&dates=FFFFFF&currStreak=FFFFFF&stroke=FFFFFF" />
 </p>
 
 ---
