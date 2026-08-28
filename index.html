@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#080b10">
+    <meta name="description" content="LEOBAY23 Legacy Hub">
+    <title>A new beginning</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="glow a"></div>
+    <div class="glow b"></div>
+    <header>
+        <a class="brand" href="#inicio"><b>LEO</b>BAY23</a>
+        <nav>
+            <a href="#inicio">Inicio</a>
+            <a href="#legacy">Legacy</a>
+            <a href="#player">Player</a>
+            <a href="#info">Info</a>
+        </nav>
+    </header>
+    <main>
+        <!-- HERO -->
+        <section class="hero" id="inicio">
+            <div>
+                <h1>
+                    Mi web, pero<br>
+                    <span>con una nueva cara.</span>
+                </h1>
+                <p>
+                    Un espacio para conservar la versión Legacy de mi antigua web
+                    y presentar <strong>LEOBAY PLAYER</strong> de una forma más moderna.
+                </p>
+                <a class="btn cyan" href="#legacy">Ver Legacy</a>
+                <a class="btn" href="#player">Ver Player</a>
+            </div>
+        </section>
+        <!-- LEGACY -->
+        <section class="section" id="legacy">
+            <small>01 // LEGACY</small>
+            <h2>
+                Ghost <span>Legacy</span>
+            </h2>
+            <p>
+                La versión original queda guardada dentro de este repositorio
+                y puede verse directamente desde acá.
+            </p>
+            <div class="frame">
+                <div class="bar">
+                    ● ● ●
+                    <span>/legacy/leo.html</span>
+                    <a href="legacy/leo.html" target="_blank">Abrir aparte ↗</a>
+                </div>
+                <iframe src="legacy/leo.html" title="Ghost Legacy"></iframe>
+            </div>
+        </section>
+        <!-- PLAYER -->
+        <section class="section" id="player">
+            <small>02 // TOOL</small>
+            <h2>
+                VISUAL STUDIO <span>PLAYER</span>
+            </h2>
+            <p>
+                El reproductor original de Windows, conservado junto con su código fuente.
+            </p>
+            <div class="grid">
+                <article class="card">
+                    <div class="icon">▶</div>
+                    <div>
+                        <label>WINDOWS / LEGACY</label>
+                        <h3>Reproductor de música</h3>
+                        <p>
+                            Reproductor desarrollado en C# con Windows Forms
+                            y Windows Media Player.
+                        </p>
+                        <div class="chips">
+                            <b>C#</b>
+                            <b>WinForms</b>
+                            <b>WMP</b>
+                        </div>
+                        <a class="btn cyan" href="player/download/LEOBAY-PLAYER.exe" download>
+                            Descargar .EXE
+                        </a>
+                    </div>
+                </article>
+                <article class="card">
+                    <label>SOURCE CODE</label>
+                    <h3>Ver cómo está hecho</h3>
+                    <p>
+                        El proyecto original está incluido para revisarlo,
+                        modificarlo o recompilarlo.
+                    </p>
+                    <a class="btn" href="player/music%20player/LEOBAY%20PLAYER/Form1.cs" target="_blank">
+                        Ver Form1.cs
+                    </a>
+                </article>
+            </div>
+            <!-- WEB PLAYER -->
+            <div class="card webplayer">
+                <label>WEB TOOL</label>
+                <h3>Probalo en el navegador</h3>
+                <p>
+                    Seleccioná archivos de audio de tu PC y armá una playlist local.
+                    Los archivos no se suben a ningún servidor.
+                </p>
+                <label class="file">
+                    <input id="files" type="file" accept="audio/*" multiple>
+                    + Agregar música
+                </label>
+
+                <div id="list" class="list">
+                    Todavía no hay canciones.
+                </div>
+                <div class="controls">
+                    <button id="prev">⏮</button>
+                    <button id="toggle">▶</button>
+                    <button id="next">⏭</button>
+                    <span id="name">Nada seleccionado</span>
+                    <input id="vol" type="range" min="0" max="1" step=".01" value=".8">
+                </div>
+                <audio id="audio"></audio>
+            </div>
+        </section>
+        <!-- INFO -->
+        <section class="section" id="info">
+            <small>03 // ARCHIVE</small>
+            <h2>
+                Todo en <span>un solo lugar</span>
+            </h2>
+            <div class="grid three">
+                <div class="mini">
+                    <b>01</b>
+                    <h3>Legacy</h3>
+                    <p>
+                        La web antigua vive en <code>/legacy</code>.
+                    </p>
+                </div>
+                <div class="mini">
+                    <b>02</b>
+                    <h3>Player</h3>
+                    <p>
+                        Ejecutable y código fuente en <code>/player</code>.
+                    </p>
+                </div>
+                <div class="mini">
+                    <b>03</b>
+                    <h3>Rediseño</h3>
+                    <p>
+                        Esta portada es el nuevo punto de entrada.
+                    </p>
+                </div>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <b>LEOBAY23</b>
+        <span>LEGACY // PRESERVED</span>
+    </footer>
+    <script src="script.js"></script>
+</body>
+</html>
