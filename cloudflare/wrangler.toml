@@ -1,0 +1,8 @@
+name = "leobay-school-api"
+main = "worker.js"
+compatibility_date = "2026-08-28"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "leobay-school"
+database_id = "62bc2a92-9603-4586-bb6f-5d425493936f"
