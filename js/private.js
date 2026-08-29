@@ -33,7 +33,9 @@ function getToken() {
 
 function escapeHTML(text) {
     const div = document.createElement("div");
+
     div.textContent = text ?? "";
+
     return div.innerHTML;
 }
 
@@ -52,8 +54,8 @@ if (loginForm) {
 
             const password = schoolPassword.value;
 
-            schoolMessage.textContent = "Verificando...";
-            schoolMessage.style.color = "";
+            schoolMessage.textContent =
+                "Verificando...";
 
             try {
 
@@ -63,7 +65,8 @@ if (loginForm) {
                         method: "POST",
 
                         headers: {
-                            "Content-Type": "application/json"
+                            "Content-Type":
+                                "application/json"
                         },
 
                         body: JSON.stringify({
@@ -72,7 +75,8 @@ if (loginForm) {
                     }
                 );
 
-                const data = await response.json();
+                const data =
+                    await response.json();
 
                 if (!response.ok) {
 
@@ -122,6 +126,7 @@ async function loadCodes() {
         return;
     }
 
+
     try {
 
         const response = await fetch(
@@ -136,8 +141,10 @@ async function loadCodes() {
             }
         );
 
+
         const data =
             await response.json();
+
 
         if (!response.ok) {
 
@@ -170,6 +177,10 @@ async function loadCodes() {
         }
 
 
+        // =========================
+        // ESTADO
+        // =========================
+
         codeStatus.textContent =
             `${data.codes.length} código(s) disponible(s).`;
 
@@ -186,7 +197,7 @@ async function loadCodes() {
                 document.createElement("article");
 
             article.className =
-                "mini code-card";
+                "mini";
 
 
             // =========================
@@ -198,63 +209,33 @@ async function loadCodes() {
                 item.content ||
                 "";
 
-            const rawLines =
-                code
-                    .replace(/\r\n/g, "\n")
-                    .split("\n");
+
+            const rawLines = code
+                .replace(/\r\n/g, "\n")
+                .split("\n");
 
 
-            // Buscar indentación mínima
+            // =========================
+            // CREAR LÍNEAS
+            // =========================
 
-            const indents =
-                rawLines
-                    .filter(function (line) {
-                        return line.trim() !== "";
-                    })
-                    .map(function (line) {
+            const lines = rawLines
+                .map(function (line, index) {
 
-                        const match =
-                            line.match(/^\s+/);
+                    return `
+                        <div class="code-line">
 
-                        return match
-                            ? match[0].length
-                            : 0;
-                    });
+                            <span class="line-number">
+                                ${index + 1}
+                            </span>
 
+                            <span class="line-content">${escapeHTML(line) || " "}</span>
 
-            const minIndent =
-                indents.length
-                    ? Math.min.apply(null, indents)
-                    : 0;
+                        </div>
+                    `;
 
-
-            // Crear líneas
-
-            const lines =
-                rawLines
-                    .map(function (line) {
-
-                        return minIndent > 0
-                            ? line.slice(minIndent)
-                            : line;
-                    })
-                    .map(function (line, index) {
-
-                        return `
-                            <div class="code-line">
-
-                                <span class="line-number">
-                                    ${index + 1}
-                                </span>
-
-                                <span class="line-content">
-                                    ${escapeHTML(line) || " "}
-                                </span>
-
-                            </div>
-                        `;
-                    })
-                    .join("");
+                })
+                .join("");
 
 
             // =========================
@@ -263,41 +244,23 @@ async function loadCodes() {
 
             article.innerHTML = `
 
-                <div class="code-card-header">
-
-                    <b>
-                        ${escapeHTML(
-                            item.language || "Otro"
-                        )}
-                    </b>
-
-                    <button
-                        class="delete-code-btn"
-                        type="button"
-                        title="Eliminar código"
-                    >
-                        🗑️
-                    </button>
-
-                </div>
-
+                <b>
+                    ${escapeHTML(item.language)}
+                </b>
 
                 <h3>
                     ${escapeHTML(item.title)}
                 </h3>
 
-
                 <p>
                     ${escapeHTML(item.description)}
                 </p>
-
 
                 <details>
 
                     <summary>
                         Ver código
                     </summary>
-
 
                     <div class="code-editor">
 
@@ -312,132 +275,16 @@ async function loadCodes() {
 
             codeGrid.appendChild(article);
 
-
-            // =========================
-            // BOTÓN ELIMINAR
-            // =========================
-
-            const deleteButton =
-                article.querySelector(
-                    ".delete-code-btn"
-                );
-
-
-            deleteButton.addEventListener(
-                "click",
-                async function () {
-
-
-                    // Primera confirmación
-
-                    const confirmed =
-                        confirm(
-                            `¿Seguro que querés eliminar "${item.title}"?`
-                        );
-
-
-                    if (!confirmed) {
-                        return;
-                    }
-
-
-                    // Pedir contraseña
-
-                    const adminPassword =
-                        prompt(
-                            "Ingresá la contraseña de administrador:"
-                        );
-
-
-                    if (
-                        adminPassword === null ||
-                        adminPassword === ""
-                    ) {
-                        return;
-                    }
-
-
-                    // Estado del botón
-
-                    deleteButton.disabled = true;
-                    deleteButton.textContent = "⏳";
-
-
-                    try {
-
-                        const response =
-                            await fetch(
-                                `${SCHOOL_API_URL}/api/codes/${item.id}`,
-                                {
-                                    method: "DELETE",
-
-                                    headers: {
-                                        "Content-Type":
-                                            "application/json",
-
-                                        "Authorization":
-                                            `Bearer ${token}`
-                                    },
-
-                                    body: JSON.stringify({
-                                        password:
-                                            adminPassword
-                                    })
-                                }
-                            );
-
-
-                        const data =
-                            await response.json();
-
-
-                        // Error
-
-                        if (!response.ok) {
-
-                            alert(
-                                data.error ||
-                                "No se pudo eliminar el código."
-                            );
-
-                            deleteButton.disabled =
-                                false;
-
-                            deleteButton.textContent =
-                                "🗑️";
-
-                            return;
-                        }
-
-
-                        // Eliminado correctamente
-
-                        loadCodes();
-
-
-                    } catch (error) {
-
-                        alert(
-                            "No se pudo conectar con el servidor."
-                        );
-
-                        deleteButton.disabled =
-                            false;
-
-                        deleteButton.textContent =
-                            "🗑️";
-                    }
-
-                }
-            );
-
         });
 
 
     } catch (error) {
 
+        console.error(error);
+
         codeStatus.textContent =
             "No se pudo conectar con el servidor.";
+
     }
 }
 
@@ -464,6 +311,7 @@ if (addCodeButton) {
             ) {
 
                 codeTitle.focus();
+
             }
 
         }
@@ -487,7 +335,8 @@ if (cancelCode) {
                 "active"
             );
 
-            addCodeMessage.textContent = "";
+            addCodeMessage.textContent =
+                "";
 
         }
     );
@@ -507,7 +356,8 @@ if (addCodeForm) {
             event.preventDefault();
 
 
-            const token = getToken();
+            const token =
+                getToken();
 
 
             if (!token) {
@@ -520,7 +370,7 @@ if (addCodeForm) {
 
 
             // =========================
-            // CONTRASEÑA ADMIN
+            // CONTRASEÑA ADMINISTRADOR
             // =========================
 
             const adminPassword =
@@ -529,10 +379,7 @@ if (addCodeForm) {
                 );
 
 
-            if (
-                adminPassword === null ||
-                adminPassword === ""
-            ) {
+            if (!adminPassword) {
 
                 addCodeMessage.textContent =
                     "Operación cancelada.";
@@ -560,6 +407,7 @@ if (addCodeForm) {
 
                                 "Authorization":
                                     `Bearer ${token}`
+
                             },
 
                             body: JSON.stringify({
@@ -578,6 +426,7 @@ if (addCodeForm) {
 
                                 adminPassword:
                                     adminPassword
+
                             })
                         }
                     );
@@ -623,8 +472,11 @@ if (addCodeForm) {
 
             } catch (error) {
 
+                console.error(error);
+
                 addCodeMessage.textContent =
                     "No se pudo conectar con el servidor.";
+
             }
 
         }
@@ -664,7 +516,9 @@ if (schoolLock) {
 
                 } catch (error) {
 
-                    // Continuar igualmente
+                    // Aunque falle la petición,
+                    // eliminamos el token local.
+
                 }
             }
 
