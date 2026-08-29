@@ -753,7 +753,7 @@ footer b {
 
 .code-editor {
     margin-top: 15px;
-    padding: 12px 0;
+
     background: #080b10;
     border: 1px solid #293442;
     border-radius: 10px;
@@ -763,6 +763,8 @@ footer b {
 
     max-height: 520px;
 
+    padding: 10px 0;
+
     font-family: Consolas, "Courier New", monospace;
     font-size: 13px;
     line-height: 1.65;
@@ -770,13 +772,16 @@ footer b {
     tab-size: 4;
 }
 
+/* Cada línea del código */
 .code-line {
     display: flex;
-    width: max-content;
-    min-width: 100%;
-    min-height: 21px;
+    width: 100%;
+    min-height: 22px;
+
+    font-family: Consolas, "Courier New", monospace;
 }
 
+/* Número de línea */
 .line-number {
     flex: 0 0 50px;
 
@@ -791,7 +796,10 @@ footer b {
     border-right: 1px solid #202936;
 }
 
+/* Contenido */
 .line-content {
+    display: block;
+
     padding-left: 16px;
     padding-right: 25px;
 
@@ -803,6 +811,63 @@ footer b {
 
     font-family: Consolas, "Courier New", monospace;
 }
+
+/* =========================
+   ENCABEZADO DE TARJETA
+========================= */
+
+.code-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    margin-bottom: 10px;
+}
+
+/* =========================
+   BOTÓN ELIMINAR
+========================= */
+
+.delete-code-btn {
+    width: 36px;
+    height: 36px;
+
+    display: grid;
+    place-items: center;
+
+    background: #161c25;
+    color: #aeb8c8;
+
+    border: 1px solid #303b4b;
+    border-radius: 8px;
+
+    cursor: pointer;
+
+    font-size: 15px;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.delete-code-btn:hover {
+    background: #35151f;
+    border-color: #ff4f78;
+    color: #ff4f78;
+
+    transform: scale(1.05);
+}
+
+.delete-code-btn:disabled {
+    opacity: 0.5;
+    cursor: wait;
+}
+
+/* =========================
+   AGREGAR CÓDIGO
+========================= */
 
 .school-actions {
     display: flex;
@@ -821,12 +886,15 @@ footer b {
 
 .add-code-panel > label {
     color: #00eaff;
+
     font: 800 10px monospace;
+
     letter-spacing: 2px;
 }
 
 .add-code-panel h3 {
     margin: 8px 0 20px;
+
     font-size: 22px;
 }
 
@@ -836,8 +904,11 @@ footer b {
 
 .form-group label {
     display: block;
+
     margin-bottom: 7px;
+
     color: #aeb8c8;
+
     font-size: 13px;
     font-weight: 700;
 }
@@ -846,12 +917,17 @@ footer b {
 .form-group select,
 .form-group textarea {
     width: 100%;
+
     background: #080b10;
     color: #e9eef7;
+
     border: 1px solid #293442;
     border-radius: 9px;
+
     padding: 11px 13px;
+
     outline: none;
+
     font: 13px "Segoe UI", Arial, sans-serif;
 }
 
@@ -867,73 +943,65 @@ footer b {
 
 .form-group textarea {
     min-height: 280px;
+
     resize: vertical;
+
     font: 13px/1.7 Consolas, "Courier New", monospace;
+
     tab-size: 4;
 }
 
 .form-actions {
     display: flex;
+
     gap: 10px;
+
     align-items: center;
 }
 
 .add-code-panel .password-message {
     display: block;
+
     margin-top: 12px;
 }
 
+/* =========================
+   RESPONSIVE
+========================= */
+
 @media (max-width: 850px) {
+
     .school-actions {
         flex-direction: column;
+
         align-items: stretch;
+
         width: 100%;
     }
 
     .school-actions .btn {
         width: 100%;
     }
-}
 
+    .school-header {
+        flex-direction: column;
 
-/* =========================
-   BOTÓN ELIMINAR CÓDIGO
-========================= */
+        align-items: flex-start;
 
-.code-card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
+        gap: 15px;
+    }
 
-.delete-code-btn {
-    width: 34px;
-    height: 34px;
+    .school-login {
+        flex-direction: column;
+    }
 
-    display: grid;
-    place-items: center;
+    .password-row {
+        flex-direction: column;
 
-    background: #161c25;
-    border: 1px solid #303b4b;
-    border-radius: 8px;
+        align-items: stretch;
+    }
 
-    cursor: pointer;
-
-    font-size: 14px;
-
-    transition:
-        background 0.2s ease,
-        border-color 0.2s ease,
-        transform 0.2s ease;
-}
-
-.delete-code-btn:hover {
-    background: #35151f;
-    border-color: #ff4f78;
-    transform: scale(1.05);
-}
-
-.delete-code-btn:disabled {
-    opacity: 0.5;
-    cursor: wait;
+    .password-row input {
+        width: 100%;
+    }
 }
