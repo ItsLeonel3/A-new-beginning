@@ -1,11 +1,4 @@
-CREATE TABLE IF NOT EXISTS codes (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    title TEXT NOT NULL,
-    language TEXT NOT NULL,
-    description TEXT,
-    content TEXT NOT NULL
-);
-
--- Ejemplo:
--- INSERT INTO codes (title, language, description, content)
--- VALUES ('Ejercicio Python 1', 'Python', 'Primer ejercicio escolar', 'print("Hola mundo")');
+-- LEOBAY23 School Projects
+-- No se utiliza D1 para almacenar proyectos.
+-- Los archivos comprimidos se almacenan como Release Assets
+-- en el repositorio de GitHub configurado en wrangler.toml.

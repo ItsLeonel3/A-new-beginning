@@ -4,16 +4,16 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#080b10">
-    <meta name="description" content="Códigos escolares privados de LEOBAY23">
-    <title>Códigos Escolares</title>
-    <link rel="stylesheet" href="css/style.css">
+    <meta name="description" content="Proyectos descargables privados de LEOBAY23">
+    <title>Proyectos — LEOBAY23</title>
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body class="private-page">
     <div class="glow a"></div>
     <div class="glow b"></div>
 
     <header>
-        <img src="images/descarga-removebg-preview.png" alt="Logo de la institución" class="school-logo" width="185" height="80">
+        <a class="brand" href="index.html"><b>LEO</b>BAY23</a>
         <nav>
             <a href="index.html">Inicio</a>
         </nav>
@@ -21,107 +21,107 @@
 
     <main>
         <section class="section private-section">
-    <small>03 // PRIVATE</small>
+            <small>03 // PRIVATE</small>
 
-    <div class="school-header">
-        <div>
-            <h1>Códigos <span>Escolares</span></h1>
-            <p>Material privado disponible después de autenticarte.</p>
-        </div>
+            <div class="school-header">
+                <div>
+                    <h1>Proyectos <span>Descargables</span></h1>
+                    <p>
+                        Biblioteca privada de trabajos, proyectos y archivos comprimidos.
+                    </p>
+                </div>
 
-        <div class="school-actions">
-            <button class="btn cyan" id="addCodeButton">
-                ＋ Agregar código
-            </button>
+                <div class="school-actions">
+                    <button class="btn cyan" id="addProjectButton" type="button">
+                        ＋ Subir proyecto
+                    </button>
 
-            <button class="btn" id="schoolLock">
-                🔒 Cerrar sesión
-            </button>
-        </div>
-    </div>
-
-    <div id="addCodePanel" class="card add-code-panel">
-        <label>NEW CODE</label>
-
-        <h3>Agregar código escolar</h3>
-
-        <form id="addCodeForm">
-
-            <div class="form-group">
-                <label for="codeTitle">Título</label>
-                <input
-                    id="codeTitle"
-                    type="text"
-                    placeholder="Ej: Ejercicio de herencia"
-                    required
-                >
+                    <button class="btn" id="schoolLock" type="button">
+                        🔒 Cerrar sesión
+                    </button>
+                </div>
             </div>
 
-            <div class="form-group">
-                <label for="codeDescription">Descripción</label>
-                <input
-                    id="codeDescription"
-                    type="text"
-                    placeholder="Descripción del trabajo"
-                >
+            <div id="addProjectPanel" class="card add-project-panel">
+                <label>NEW PROJECT</label>
+
+                <h3>Subir archivo comprimido</h3>
+
+                <p class="form-help">
+                    El archivo se guarda como un asset de una GitHub Release. No se almacena en D1 ni en R2.
+                </p>
+
+                <form id="addProjectForm">
+                    <div class="form-group">
+                        <label for="projectTitle">Título</label>
+                        <input
+                            id="projectTitle"
+                            type="text"
+                            placeholder="Ej: TP1 — Abstracción y clases abstractas"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="projectDescription">Descripción</label>
+                        <textarea
+                            id="projectDescription"
+                            class="project-description-input"
+                            placeholder="Descripción del proyecto..."
+                            rows="4"
+                        ></textarea>
+                    </div>
+
+                    <div class="project-form-grid">
+                        <div class="form-group">
+                            <label for="projectVersion">Versión</label>
+                            <input
+                                id="projectVersion"
+                                type="text"
+                                placeholder="Ej: 1.0.0"
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label for="projectFile">Archivo comprimido</label>
+                            <input
+                                id="projectFile"
+                                type="file"
+                                accept=".zip,.rar,.7z,application/zip,application/x-rar-compressed,application/x-7z-compressed"
+                                required
+                            >
+                        </div>
+                    </div>
+
+                    <div class="selected-file" id="selectedFile">
+                        Ningún archivo seleccionado.
+                    </div>
+
+                    <div class="form-actions">
+                        <button class="btn cyan" type="submit" id="uploadProjectButton">
+                            Subir archivo
+                        </button>
+
+                        <button class="btn" type="button" id="cancelProject">
+                            Cancelar
+                        </button>
+                    </div>
+
+                    <span id="projectMessage" class="password-message"></span>
+                </form>
             </div>
 
-            <div class="form-group">
-                <label for="codeLanguage">Lenguaje</label>
-
-                <select id="codeLanguage" required>
-                    <option value="">Seleccionar lenguaje</option>
-                    <option value="Python">Python</option>
-                    <option value="Arduino">Arduino</option>
-                    <option value="JavaScript">JavaScript</option>
-                    <option value="HTML">HTML</option>
-                    <option value="CSS">CSS</option>
-                    <option value="Java">Java</option>
-                    <option value="C">C</option>
-                    <option value="C++">C++</option>
-                    <option value="C#">C#</option>
-                    <option value="SQL">SQL</option>
-                    <option value="PHP">PHP</option>
-                    <option value="Otro">Otro</option>
-                </select>
+            <div id="projectStatus" class="card project-status">
+                Cargando proyectos...
             </div>
 
-            <div class="form-group">
-                <label for="codeContent">Código</label>
-
-                <textarea
-                    id="codeContent"
-                    placeholder="Pegá tu código acá..."
-                    spellcheck="false"
-                    required
-                ></textarea>
-            </div>
-
-            <div class="form-actions">
-                <button class="btn cyan" type="submit">
-                    Guardar código
-                </button>
-
-                <button class="btn" type="button" id="cancelCode">
-                    Cancelar
-                </button>
-            </div>
-
-            <span id="addCodeMessage" class="password-message"></span>
-        </form>
-    </div>
-
-    <div id="codeStatus" class="card code-status">
-        Cargando códigos...
-    </div>
-
-    <div id="codeGrid" class="grid school-grid"></div>
-</section>
+            <div id="projectGrid" class="project-grid"></div>
+        </section>
     </main>
 
     <footer>
         <b>LEOBAY23</b>
-        <span>PRIVATE // AUTHENTICATED</span>
+        <span>PRIVATE // PROJECT ARCHIVE</span>
     </footer>
 
     <script src="js/config.js"></script>
