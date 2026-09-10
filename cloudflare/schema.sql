@@ -1,4 +1,2 @@
--- LEOBAY23 School Projects
--- No se utiliza D1 para almacenar proyectos.
--- Los archivos comprimidos se almacenan como Release Assets
--- en el repositorio de GitHub configurado en wrangler.toml.
+-- School Projects
+-- Lo que esta viendo aqui, no tiene nada. Por curioso.
