@@ -2,7 +2,7 @@ const API_URL =
     "https://leobay-school.leonelbayon268.workers.dev";
 
 const TOKEN_KEY =
-    "leobay_school_token";
+    "TOKEN_SECRET";
 
 
 /* =========================================================
