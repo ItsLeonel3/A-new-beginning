@@ -533,62 +533,241 @@ export default {
                 }, 500, origin);
             }
         }
+        // =========================
+// ELIMINAR RELEASE
+// =========================
+
+if (
+    url.pathname.startsWith("/api/projects/") &&
+    request.method === "DELETE"
+) {
+
+    const session = await requireSession(
+        request,
+        env,
+        origin
+    );
+
+    if (!session.ok) {
+        return session.response;
+    }
+
+    try {
+
+        const parts =
+            url.pathname.split("/");
+
+        const releaseId =
+            parts[3];
+
+        if (
+            !releaseId ||
+            !/^\d+$/.test(releaseId)
+        ) {
+
+            return json({
+                error:
+                    "Release inválida."
+            }, 400, origin);
+        }
+
+
+        // =========================
+        // VERIFICAR PASSWORD ADMIN
+        // =========================
+
+        if (!env.SCHOOL_ADMIN_PASSWORD) {
+
+            return json({
+                error:
+                    "SCHOOL_ADMIN_PASSWORD no está configurada en Cloudflare."
+            }, 500, origin);
+        }
+
+
+        let body;
+
+        try {
+
+            body =
+                await request.json();
+
+        } catch {
+
+            return json({
+                error:
+                    "Solicitud inválida. Falta la contraseña de administrador."
+            }, 400, origin);
+        }
+
+
+        const adminPassword =
+            String(
+                body.adminPassword || ""
+            );
+
+
+        if (!adminPassword) {
+
+            return json({
+                error:
+                    "Debés ingresar la contraseña de administrador."
+            }, 400, origin);
+        }
+
+
+        if (
+            adminPassword !==
+            env.SCHOOL_ADMIN_PASSWORD
+        ) {
+
+            return json({
+                error:
+                    "Contraseña de administrador incorrecta."
+            }, 403, origin);
+        }
+
+
+        // =========================
+        // GITHUB
+        // =========================
+
+        const repo =
+            githubRepo(env);
+
+
+        // =========================
+        // OBTENER RELEASE
+        // =========================
+
+        const releaseResponse =
+            await githubRequest(
+                `https://api.github.com/repos/${repo}/releases/${releaseId}`,
+                env
+            );
+
+
+        const releaseData =
+            await releaseResponse
+                .json()
+                .catch(() => ({}));
+
+
+        if (
+            !releaseResponse.ok
+        ) {
+
+            return json({
+                error:
+                    releaseData.message ||
+                    "No se pudo encontrar la Release.",
+
+                githubStatus:
+                    releaseResponse.status
+            }, releaseResponse.status, origin);
+        }
+
 
         // =========================
         // ELIMINAR RELEASE
         // =========================
 
-        if (
-            url.pathname.startsWith("/api/projects/") &&
-            request.method === "DELETE"
-        ) {
-            const session = await requireSession(
-                request,
+        const deleteResponse =
+            await githubRequest(
+                `https://api.github.com/repos/${repo}/releases/${releaseId}`,
                 env,
-                origin
+                {
+                    method: "DELETE"
+                }
             );
 
-            if (!session.ok) {
-                return session.response;
-            }
 
-            try {
-                const parts = url.pathname.split("/");
-                const releaseId = parts[3];
+        if (
+            !deleteResponse.ok
+        ) {
 
-                if (!releaseId || !/^\d+$/.test(releaseId)) {
-                    return json({
-                        error: "Release inválida."
-                    }, 400, origin);
-                }
+            const deleteData =
+                await deleteResponse
+                    .json()
+                    .catch(() => ({}));
 
-                const repo = githubRepo(env);
 
-                const response = await githubRequest(
-                    `https://api.github.com/repos/${repo}/releases/${releaseId}`,
-                    env,
-                    { method: "DELETE" }
+            return json({
+                error:
+                    deleteData.message ||
+                    "GitHub no pudo eliminar la Release.",
+
+                githubStatus:
+                    deleteResponse.status
+            }, deleteResponse.status, origin);
+        }
+
+
+        // =========================
+        // ELIMINAR TAG
+        // =========================
+
+        if (
+            releaseData.tag_name
+        ) {
+
+            const tag =
+                encodeURIComponent(
+                    releaseData.tag_name
                 );
 
-                if (!response.ok) {
-                    const data = await response.json().catch(() => ({}));
 
-                    return json({
-                        error: data.message || "No se pudo eliminar la Release."
-                    }, response.status, origin);
-                }
+            const tagResponse =
+                await githubRequest(
+                    `https://api.github.com/repos/${repo}/git/refs/tags/${tag}`,
+                    env,
+                    {
+                        method: "DELETE"
+                    }
+                );
 
-                return json({
-                    success: true,
-                    message: "Proyecto eliminado correctamente."
-                }, 200, origin);
-            } catch (error) {
-                return json({
-                    error: error.message || "No se pudo eliminar el proyecto."
-                }, 500, origin);
+
+            /*
+             * No hacemos fallar toda la operación
+             * si el tag ya no existe.
+             */
+
+            if (
+                !tagResponse.ok &&
+                tagResponse.status !== 404
+            ) {
+
+                console.error(
+                    "No se pudo eliminar el tag:",
+                    tagResponse.status
+                );
             }
         }
 
+
+        return json({
+            success: true,
+
+            message:
+                "Proyecto eliminado correctamente."
+        }, 200, origin);
+
+
+    } catch (error) {
+
+        console.error(
+            "DELETE PROJECT ERROR:",
+            error
+        );
+
+
+        return json({
+            error:
+                error.message ||
+                "No se pudo eliminar el proyecto."
+        }, 500, origin);
+    }
+}
         // =========================
         // LOGOUT
         // =========================
