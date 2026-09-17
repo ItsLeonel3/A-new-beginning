@@ -1,559 +1,145 @@
 const API_URL =
     "https://leobay-school.leonelbayon268.workers.dev";
 
-const TOKEN_KEY =
-    "TOKEN_SECRET";
+const TOKEN_KEY = "school_token";
 
+const token = () =>
+    localStorage.getItem(TOKEN_KEY);
 
-/* =========================================================
-   ELEMENTOS
-========================================================= */
+const api = async (url, options = {}) => {
 
-const projectsContainer =
-    document.getElementById("projectsContainer");
-
-const addProjectButton =
-    document.getElementById("addProjectButton");
-
-const addProjectPanel =
-    document.getElementById("addProjectPanel");
-
-const addProjectForm =
-    document.getElementById("addProjectForm");
-
-const cancelProject =
-    document.getElementById("cancelProject");
-
-const projectTitle =
-    document.getElementById("projectTitle");
-
-const projectDescription =
-    document.getElementById("projectDescription");
-
-const projectFile =
-    document.getElementById("projectFile");
-
-const addProjectMessage =
-    document.getElementById("addProjectMessage");
-
-const logoutButton =
-    document.getElementById("logoutButton");
-
-
-/* =========================================================
-   TOKEN
-========================================================= */
-
-function getToken() {
-
-    return localStorage.getItem(
-        TOKEN_KEY
-    );
-}
-
-
-/* =========================================================
-   CERRAR SESIÓN
-========================================================= */
-
-function logout() {
-
-    localStorage.removeItem(
-        TOKEN_KEY
-    );
-
-    window.location.href =
-        "login.html";
-}
-
-
-/* =========================================================
-   PETICIÓN API
-========================================================= */
-
-async function apiFetch(
-    endpoint,
-    options = {}
-) {
-
-    const token =
-        getToken();
-
-    if (!token) {
-
-        logout();
-
-        throw new Error(
-            "Sesión no iniciada."
-        );
-    }
-
-
-    const headers = {
-        ...(options.headers || {}),
-        "Authorization":
-            `Bearer ${token}`
-    };
-
-
-    const response =
-        await fetch(
-            API_URL + endpoint,
-            {
-                ...options,
-                headers
-            }
-        );
-
-
-    if (
-        response.status === 401
-    ) {
-
-        localStorage.removeItem(
-            TOKEN_KEY
-        );
-
-        window.location.href =
-            "login.html";
-
-        throw new Error(
-            "Sesión vencida."
-        );
-    }
-
-
-    return response;
-}
-
-
-/* =========================================================
-   ESCAPAR HTML
-========================================================= */
-
-function escapeHTML(value) {
-
-    const div =
-        document.createElement(
-            "div"
-        );
-
-    div.textContent =
-        value ?? "";
-
-    return div.innerHTML;
-}
-
-
-/* =========================================================
-   FORMATEAR TAMAÑO
-========================================================= */
-
-function formatSize(bytes) {
-
-    if (
-        !bytes ||
-        bytes <= 0
-    ) {
-        return "0 B";
-    }
-
-    const units = [
-        "B",
-        "KB",
-        "MB",
-        "GB"
-    ];
-
-    let size =
-        bytes;
-
-    let index = 0;
-
-    while (
-        size >= 1024 &&
-        index <
-            units.length - 1
-    ) {
-
-        size /= 1024;
-        index++;
-    }
-
-    return (
-        size.toFixed(
-            index === 0
-                ? 0
-                : 2
-        ) +
-        " " +
-        units[index]
-    );
-}
-
-
-/* =========================================================
-   FECHA
-========================================================= */
-
-function formatDate(date) {
-
-    if (!date) {
-        return "";
-    }
-
-    const parsed =
-        new Date(date);
-
-    if (
-        Number.isNaN(
-            parsed.getTime()
-        )
-    ) {
-        return date;
-    }
-
-    return parsed.toLocaleDateString(
-        "es-AR",
+    const response = await fetch(
+        API_URL + url,
         {
-            day: "2-digit",
-            month: "2-digit",
-            year: "numeric"
+            ...options,
+            headers: {
+                ...(options.headers || {}),
+                Authorization: `Bearer ${token()}`
+            }
         }
     );
-}
+
+    if (response.status === 401) {
+        localStorage.removeItem(TOKEN_KEY);
+        location.href = "login.html";
+        return null;
+    }
+
+    return response;
+};
 
 
-/* =========================================================
+/* =========================
    CARGAR PROYECTOS
-========================================================= */
+========================= */
 
 async function loadProjects() {
 
-    if (!projectsContainer) {
-        return;
-    }
+    const container =
+        document.getElementById("projectsContainer");
 
+    if (!container) return;
 
-    projectsContainer.innerHTML = `
-        <div class="loading-projects">
-            Cargando proyectos...
-        </div>
-    `;
-
+    container.innerHTML =
+        "<p>Cargando proyectos...</p>";
 
     try {
 
         const response =
-            await apiFetch(
-                "/api/projects",
-                {
-                    method: "GET"
-                }
-            );
+            await api("/api/projects");
 
+        if (!response) return;
 
         const data =
             await response.json();
 
-
         if (!response.ok) {
 
-            console.error(
-                "Error /api/projects:",
-                data
-            );
-
-            projectsContainer.innerHTML = `
-                <div class="projects-error">
-                    ${escapeHTML(
-                        data.error ||
-                        "No se pudieron cargar los proyectos."
-                    )}
-                </div>
-            `;
+            container.innerHTML =
+                `<p>${data.error || "Error al cargar proyectos."}</p>`;
 
             return;
         }
 
-
         const projects =
-            Array.isArray(
-                data.projects
-            )
-                ? data.projects
-                : [];
+            data.projects || [];
 
+        if (!projects.length) {
 
-        renderProjects(
-            projects
-        );
+            container.innerHTML =
+                "<p>No hay proyectos publicados.</p>";
 
+            return;
+        }
 
-    } catch (error) {
+        container.innerHTML =
+            projects.map(project => `
 
-        console.error(
-            "Error cargando proyectos:",
-            error
-        );
+                <article class="project-card">
 
-
-        projectsContainer.innerHTML = `
-            <div class="projects-error">
-                No se pudieron cargar los proyectos.
-            </div>
-        `;
-    }
-}
-
-
-/* =========================================================
-   MOSTRAR PROYECTOS
-========================================================= */
-
-function renderProjects(
-    projects
-) {
-
-    if (!projectsContainer) {
-        return;
-    }
-
-
-    if (
-        projects.length === 0
-    ) {
-
-        projectsContainer.innerHTML = `
-            <div class="no-projects">
-                <h3>No hay proyectos</h3>
-                <p>
-                    Todavía no se ha publicado ningún proyecto.
-                </p>
-            </div>
-        `;
-
-        return;
-    }
-
-
-    projectsContainer.innerHTML =
-        projects
-            .map(
-                project =>
-                    createProjectHTML(
-                        project
-                    )
-            )
-            .join("");
-
-
-    /*
-     * Eventos de descarga
-     */
-
-    document
-        .querySelectorAll(
-            "[data-download-project]"
-        )
-        .forEach(
-            button => {
-
-                button.addEventListener(
-                    "click",
-                    () => {
-
-                        const releaseId =
-                            button.dataset
-                                .releaseId;
-
-                        const assetId =
-                            button.dataset
-                                .assetId;
-
-                        downloadProject(
-                            releaseId,
-                            assetId
-                        );
-                    }
-                );
-            }
-        );
-
-
-    /*
-     * Eventos de eliminación
-     */
-
-    document
-        .querySelectorAll(
-            "[data-delete-project]"
-        )
-        .forEach(
-            button => {
-
-                button.addEventListener(
-                    "click",
-                    () => {
-
-                        const projectId =
-                            button.dataset
-                                .projectId;
-
-                        deleteProject(
-                            projectId
-                        );
-                    }
-                );
-            }
-        );
-}
-
-
-/* =========================================================
-   HTML DE UN PROYECTO
-========================================================= */
-
-function createProjectHTML(
-    project
-) {
-
-    const assets =
-        Array.isArray(
-            project.assets
-        )
-            ? project.assets
-            : [];
-
-
-    const assetsHTML =
-        assets.length > 0
-
-            ? assets
-                .map(
-                    asset => `
-                        <div class="project-file">
-
-                            <div class="project-file-info">
-
-                                <span class="project-file-name">
-                                    ${escapeHTML(
-                                        asset.name
-                                    )}
-                                </span>
-
-                                <span class="project-file-size">
-                                    ${formatSize(
-                                        asset.size
-                                    )}
-                                </span>
-
-                            </div>
-
-                            <button
-                                class="download-project"
-                                data-download-project
-                                data-release-id="${project.id}"
-                                data-asset-id="${asset.id}"
-                                type="button"
-                            >
-                                Descargar
-                            </button>
-
-                        </div>
-                    `
-                )
-                .join("")
-
-            : `
-                <div class="project-no-files">
-                    Este proyecto no tiene archivos.
-                </div>
-            `;
-
-
-    return `
-        <article
-            class="project-card"
-            data-project-id="${project.id}"
-        >
-
-            <div class="project-card-header">
-
-                <div>
-
-                    <h3 class="project-title">
+                    <h3>
                         ${escapeHTML(
-                            project.name ||
-                            "Proyecto sin nombre"
+                            project.name || "Sin título"
                         )}
                     </h3>
 
-                    <span class="project-tag">
+                    <p>
                         ${escapeHTML(
-                            project.tag ||
-                            ""
+                            project.description || ""
                         )}
-                    </span>
+                    </p>
 
-                </div>
+                    <div class="project-files">
 
-            </div>
+                        ${(project.assets || [])
+                            .map(asset => `
 
+                                <div class="project-file">
 
-            <div class="project-card-body">
+                                    <span>
+                                        ${escapeHTML(asset.name)}
+                                    </span>
 
-                <p class="project-description">
-                    ${escapeHTML(
-                        project.description ||
-                        "Sin descripción."
-                    )}
-                </p>
+                                    <button
+                                        onclick="downloadProject(
+                                            ${project.id},
+                                            ${asset.id}
+                                        )"
+                                    >
+                                        Descargar
+                                    </button>
 
+                                </div>
 
-                <div class="project-meta">
+                            `)
+                            .join("")}
 
-                    <span>
-                        Publicado:
-                        ${formatDate(
-                            project.published_at ||
-                            project.created_at
-                        )}
-                    </span>
-
-                </div>
-
-
-                <div class="project-files">
-
-                    ${assetsHTML}
-
-                </div>
-
-
-                <div class="project-actions">
+                    </div>
 
                     <button
-                        type="button"
                         class="delete-project"
-                        data-delete-project
-                        data-project-id="${project.id}"
+                        onclick="deleteProject(${project.id})"
                     >
                         Eliminar
                     </button>
 
-                </div>
+                </article>
 
-            </div>
+            `).join("");
 
-        </article>
-    `;
+    } catch (error) {
+
+        console.error(error);
+
+        container.innerHTML =
+            "<p>No se pudo conectar con el servidor.</p>";
+    }
 }
 
 
-/* =========================================================
-   DESCARGAR PROYECTO
-========================================================= */
+/* =========================
+   DESCARGAR
+========================= */
 
 async function downloadProject(
     releaseId,
@@ -563,200 +149,82 @@ async function downloadProject(
     try {
 
         const response =
-            await apiFetch(
-                `/api/projects/${releaseId}/assets/${assetId}`,
-                {
-                    method: "GET"
-                }
+            await api(
+                `/api/projects/${releaseId}/assets/${assetId}`
             );
 
+        if (!response || !response.ok) {
 
-        if (!response.ok) {
-
-            let data = {};
-
-            try {
-                data =
-                    await response.json();
-            } catch {
-                // No hacemos nada.
-            }
-
+            const data =
+                await response?.json()
+                    .catch(() => ({}));
 
             alert(
-                data.error ||
+                data?.error ||
                 "No se pudo descargar el archivo."
             );
 
             return;
         }
 
-
         const blob =
             await response.blob();
 
-
-        /*
-         * Intentamos obtener el nombre
-         * desde Content-Disposition.
-         */
-
-        let filename =
-            "proyecto";
-
-
-        const disposition =
-            response.headers.get(
-                "Content-Disposition"
-            );
-
-
-        if (disposition) {
-
-            const match =
-                disposition.match(
-                    /filename="?([^"]+)"?/i
-                );
-
-            if (match) {
-                filename =
-                    match[1];
-            }
-        }
-
-
-        /*
-         * Si no conseguimos nombre,
-         * usamos uno genérico.
-         */
-
-        if (
-            filename ===
-            "proyecto"
-        ) {
-
-            filename =
-                "proyecto-descargable";
-        }
-
-
-        const blobUrl =
-            URL.createObjectURL(
-                blob
-            );
-
+        const url =
+            URL.createObjectURL(blob);
 
         const link =
-            document.createElement(
-                "a"
-            );
+            document.createElement("a");
 
-
-        link.href =
-            blobUrl;
+        link.href = url;
 
         link.download =
-            filename;
-
-        document.body.appendChild(
-            link
-        );
+            "proyecto";
 
         link.click();
 
-        link.remove();
-
-
-        setTimeout(
-            () => {
-                URL.revokeObjectURL(
-                    blobUrl
-                );
-            },
-            1000
-        );
-
+        URL.revokeObjectURL(url);
 
     } catch (error) {
 
-        console.error(
-            "Error descargando:",
-            error
-        );
+        console.error(error);
 
         alert(
-            "No se pudo descargar el archivo."
+            "Error al descargar."
         );
     }
 }
 
 
-/* =========================================================
-   ELIMINAR PROYECTO
-========================================================= */
+/* =========================
+   ELIMINAR
+========================= */
 
 async function deleteProject(
     projectId
 ) {
 
-    if (!projectId) {
-
-        console.error(
-            "No se recibió projectId."
-        );
-
+    if (
+        !confirm(
+            "¿Eliminar este proyecto?"
+        )
+    ) {
         return;
     }
 
-
-    const confirmed =
-        confirm(
-            "¿Seguro que querés eliminar este proyecto?\n\n" +
-            "Se eliminará el Release y sus archivos de GitHub."
-        );
-
-
-    if (!confirmed) {
-        return;
-    }
-
-
-    /*
-     * Pedimos la contraseña de administrador.
-     */
-
-    const adminPassword =
+    const password =
         prompt(
-            "Ingresá la contraseña de administrador:"
+            "Contraseña de administrador:"
         );
 
-
-    if (
-        adminPassword === null
-    ) {
-        return;
-    }
-
-
-    if (
-        adminPassword.trim() === ""
-    ) {
-
-        alert(
-            "La contraseña de administrador es obligatoria."
-        );
-
-        return;
-    }
-
+    if (!password) return;
 
     try {
 
         const response =
-            await apiFetch(
+            await api(
                 `/api/projects/${projectId}`,
                 {
-
                     method: "DELETE",
 
                     headers: {
@@ -764,350 +232,160 @@ async function deleteProject(
                             "application/json"
                     },
 
-                    /*
-                     * ESTE ES EL CAMBIO IMPORTANTE.
-                     * El Worker espera adminPassword
-                     * dentro del JSON.
-                     */
-
-                    body:
-                        JSON.stringify({
-                            adminPassword:
-                                adminPassword
-                        })
+                    body: JSON.stringify({
+                        adminPassword:
+                            password
+                    })
                 }
             );
 
+        if (!response) return;
 
-        let data = {};
-
-        try {
-
-            data =
-                await response.json();
-
-        } catch {
-            // Respuesta sin JSON.
-        }
-
+        const data =
+            await response.json();
 
         if (!response.ok) {
 
-            console.error(
-                "Error eliminando proyecto:",
-                {
-                    status:
-                        response.status,
-                    data
-                }
-            );
-
-
-            if (
-                response.status ===
-                403
-            ) {
-
-                alert(
-                    "La contraseña de administrador es incorrecta."
-                );
-
-                return;
-            }
-
-
-            if (
-                response.status ===
-                401
-            ) {
-
-                alert(
-                    "La sesión expiró."
-                );
-
-                logout();
-
-                return;
-            }
-
-
             alert(
                 data.error ||
-                "No se pudo eliminar el proyecto."
+                "No se pudo eliminar."
             );
 
             return;
         }
 
-
         alert(
-            "Proyecto eliminado correctamente."
+            "Proyecto eliminado."
         );
 
-
-        /*
-         * Actualizamos la lista.
-         */
-
-        await loadProjects();
-
+        loadProjects();
 
     } catch (error) {
 
-        console.error(
-            "Error de conexión al eliminar:",
-            error
-        );
+        console.error(error);
 
         alert(
-            "No se pudo conectar con el servidor."
+            "Error al eliminar."
         );
     }
 }
 
 
-/* =========================================================
-   MOSTRAR / OCULTAR PANEL
-========================================================= */
-
-if (
-    addProjectButton &&
-    addProjectPanel
-) {
-
-    addProjectButton.addEventListener(
-        "click",
-        () => {
-
-            addProjectPanel.hidden =
-                !addProjectPanel.hidden;
-
-        }
-    );
-}
-
-
-if (cancelProject) {
-
-    cancelProject.addEventListener(
-        "click",
-        () => {
-
-            if (
-                addProjectPanel
-            ) {
-
-                addProjectPanel.hidden =
-                    true;
-            }
-
-
-            if (
-                addProjectForm
-            ) {
-
-                addProjectForm.reset();
-            }
-
-
-            if (
-                addProjectMessage
-            ) {
-
-                addProjectMessage.textContent =
-                    "";
-            }
-        }
-    );
-}
-
-
-/* =========================================================
+/* =========================
    SUBIR PROYECTO
-========================================================= */
+========================= */
 
-if (addProjectForm) {
+const form =
+    document.getElementById(
+        "addProjectForm"
+    );
 
-    addProjectForm.addEventListener(
+if (form) {
+
+    form.addEventListener(
         "submit",
         async event => {
 
             event.preventDefault();
 
-
             const title =
-                projectTitle
-                    ? projectTitle.value.trim()
-                    : "";
-
+                document.getElementById(
+                    "projectTitle"
+                ).value.trim();
 
             const description =
-                projectDescription
-                    ? projectDescription.value.trim()
-                    : "";
-
+                document.getElementById(
+                    "projectDescription"
+                ).value.trim();
 
             const file =
-                projectFile
-                    ? projectFile.files[0]
-                    : null;
+                document.getElementById(
+                    "projectFile"
+                ).files[0];
 
+            if (!title || !file) {
 
-            if (!title) {
-
-                showProjectMessage(
-                    "Ingresá un título.",
-                    true
+                alert(
+                    "Completá el título y seleccioná un archivo."
                 );
 
                 return;
             }
 
-
-            if (!file) {
-
-                showProjectMessage(
-                    "Seleccioná un archivo.",
-                    true
-                );
-
-                return;
-            }
-
-
-            const filename =
+            const name =
                 file.name.toLowerCase();
 
+            if (
+                !name.endsWith(".zip") &&
+                !name.endsWith(".rar") &&
+                !name.endsWith(".7z")
+            ) {
 
-            const allowed =
-                filename.endsWith(".zip") ||
-                filename.endsWith(".rar") ||
-                filename.endsWith(".7z");
-
-
-            if (!allowed) {
-
-                showProjectMessage(
-                    "Solo se permiten archivos .zip, .rar o .7z.",
-                    true
+                alert(
+                    "Solo se permiten ZIP, RAR o 7Z."
                 );
 
                 return;
             }
-
 
             const formData =
                 new FormData();
-
 
             formData.append(
                 "title",
                 title
             );
 
-
             formData.append(
                 "description",
                 description
             );
-
 
             formData.append(
                 "file",
                 file
             );
 
-
             try {
 
-                showProjectMessage(
-                    "Subiendo proyecto...",
-                    false
-                );
-
-
                 const response =
-                    await apiFetch(
+                    await api(
                         "/api/projects",
                         {
-
                             method: "POST",
-
-                            body:
-                                formData
+                            body: formData
                         }
                     );
 
+                if (!response) return;
 
                 const data =
                     await response.json();
 
-
                 if (!response.ok) {
 
-                    console.error(
-                        "Error subiendo proyecto:",
-                        data
-                    );
-
-
-                    showProjectMessage(
+                    alert(
                         data.error ||
-                        "No se pudo subir el proyecto.",
-                        true
+                        "No se pudo subir el proyecto."
                     );
 
                     return;
                 }
 
-
-                showProjectMessage(
-                    "Proyecto subido correctamente.",
-                    false
+                alert(
+                    "Proyecto subido correctamente."
                 );
 
+                form.reset();
 
-                addProjectForm.reset();
-
-
-                await loadProjects();
-
-
-                setTimeout(
-                    () => {
-
-                        if (
-                            addProjectPanel
-                        ) {
-
-                            addProjectPanel.hidden =
-                                true;
-                        }
-
-                        if (
-                            addProjectMessage
-                        ) {
-
-                            addProjectMessage.textContent =
-                                "";
-                        }
-
-                    },
-                    1500
-                );
-
+                loadProjects();
 
             } catch (error) {
 
-                console.error(
-                    "Error subiendo:",
-                    error
-                );
+                console.error(error);
 
-
-                showProjectMessage(
-                    "No se pudo conectar con el servidor.",
-                    true
+                alert(
+                    "Error al subir el proyecto."
                 );
             }
         }
@@ -1115,74 +393,52 @@ if (addProjectForm) {
 }
 
 
-/* =========================================================
-   MENSAJE DEL FORMULARIO
-========================================================= */
-
-function showProjectMessage(
-    message,
-    error = false
-) {
-
-    if (
-        !addProjectMessage
-    ) {
-        return;
-    }
-
-
-    addProjectMessage.textContent =
-        message;
-
-
-    addProjectMessage.classList.toggle(
-        "error",
-        error
-    );
-
-
-    addProjectMessage.classList.toggle(
-        "success",
-        !error
-    );
-}
-
-
-/* =========================================================
+/* =========================
    LOGOUT
-========================================================= */
+========================= */
+
+const logoutButton =
+    document.getElementById(
+        "logoutButton"
+    );
 
 if (logoutButton) {
 
-    logoutButton.addEventListener(
-        "click",
-        event => {
+    logoutButton.onclick = () => {
 
-            event.preventDefault();
+        localStorage.removeItem(
+            TOKEN_KEY
+        );
 
-            logout();
-        }
-    );
+        location.href =
+            "login.html";
+    };
 }
 
 
-/* =========================================================
-   INICIO
-========================================================= */
+/* =========================
+   SEGURIDAD / INICIO
+========================= */
 
-document.addEventListener(
-    "DOMContentLoaded",
-    () => {
+function escapeHTML(text) {
 
-        if (!getToken()) {
+    const div =
+        document.createElement("div");
 
-            window.location.href =
-                "login.html";
+    div.textContent =
+        text ?? "";
 
-            return;
-        }
+    return div.innerHTML;
+}
 
 
-        loadProjects();
-    }
-);
+if (!token()) {
+
+    location.replace(
+        "login.html"
+    );
+
+} else {
+
+    loadProjects();
+}
