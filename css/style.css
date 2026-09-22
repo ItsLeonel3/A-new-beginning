@@ -13,9 +13,6 @@ body {
     font: 15px/1.6 Segoe UI, Arial, sans-serif;
 }
 
-a {
-    color: inherit;
-}
 
 /* =========================
    EFECTOS DE FONDO
@@ -59,9 +56,9 @@ header {
 
     padding: 0 7%;
 
-    background: #080b10dd;
+    background: #FFFFFF;
     backdrop-filter: blur(14px);
-    border-bottom: 1px solid #202734;
+    border-bottom: 1px solid #FFFFFF;
 }
 
 .brand {
@@ -87,7 +84,7 @@ nav {
 
 nav a {
     text-decoration: none;
-    color: #aeb8c8;
+    color: #528af1;
     font-size: 13px;
 }
 
@@ -150,16 +147,25 @@ nav a:hover {
 
 .btn {
     display: inline-block;
-
     text-decoration: none;
-
-    background: #121923;
+    background: #4781b1;
     border: 1px solid #303b4b;
     border-radius: 9px;
-
     padding: 10px 15px;
     margin: 18px 8px 0 0;
+    font-weight: 800;
+    font-size: 13px;
+}
 
+.btnn {
+    display: inline-block;
+    text-decoration: none;
+    background: transparent;
+    border: 1px solid #00eaff;
+    color:#00eaff;
+    border-radius: 9px;
+    padding: 10px 15px;
+    margin: 18px 8px 0 0;
     font-weight: 800;
     font-size: 13px;
 }
@@ -660,4 +666,274 @@ footer b {
         align-items: flex-start;
         gap: 15px;
     }
+}
+
+.school-grid pre {
+    position: relative;
+    margin: 18px 0 0;
+    padding: 18px 20px;
+    background: #080b10;
+    border: 1px solid #293442;
+    border-radius: 10px;
+    overflow-x: auto;
+    overflow-y: auto;
+    max-height: 500px;
+    white-space: pre;
+}
+
+.school-grid pre code {
+    display: block;
+    color: #dce7f5;
+    font-family: Consolas, "Courier New", monospace;
+    font-size: 13px;
+    line-height: 1.7;
+    white-space: pre;
+    tab-size: 4;
+}
+
+/* =========================
+   PRIVATE PAGES
+========================= */
+
+.private-section {
+    min-height: calc(100vh - 140px);
+}
+
+.private-section h1 {
+    font-size: clamp(48px, 7vw, 72px);
+    margin: 18px 0;
+}
+
+.private-section h1 span {
+    color: #00eaff;
+}
+
+.password-row input {
+    font: 14px monospace;
+}
+
+.password-row button:disabled {
+    opacity: 0.55;
+    cursor: wait;
+}
+
+.code-status {
+    margin-top: 30px;
+    color: #8f9bad;
+}
+
+.code-view {
+    margin: 18px 0 0;
+    padding: 18px;
+    max-height: 420px;
+    overflow: auto;
+    background: #080b10;
+    border: 1px solid #222c38;
+    border-radius: 10px;
+    color: #aeb8c8;
+    font: 13px/1.6 Consolas, monospace;
+    white-space: pre-wrap;
+}
+
+.code-card {
+    min-width: 0;
+}
+
+@media (max-width: 850px) {
+    .school-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+}
+
+/* =========================
+   CODE EDITOR
+========================= */
+
+.code-editor {
+    margin-top: 15px;
+    padding: 12px 0;
+    background: #080b10;
+    border: 1px solid #293442;
+    border-radius: 10px;
+
+    overflow-x: auto;
+    overflow-y: auto;
+
+    max-height: 520px;
+
+    font-family: Consolas, "Courier New", monospace;
+    font-size: 13px;
+    line-height: 1.65;
+
+    tab-size: 4;
+}
+
+.code-line {
+    display: flex;
+    width: max-content;
+    min-width: 100%;
+    min-height: 21px;
+}
+
+.line-number {
+    flex: 0 0 50px;
+
+    padding-right: 14px;
+
+    text-align: right;
+
+    color: #465366;
+
+    user-select: none;
+
+    border-right: 1px solid #202936;
+}
+
+.line-content {
+    padding-left: 16px;
+    padding-right: 25px;
+
+    color: #dce7f5;
+
+    white-space: pre;
+
+    text-align: left;
+
+    font-family: Consolas, "Courier New", monospace;
+}
+
+.school-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.add-code-panel {
+    display: none;
+    margin: 25px 0;
+}
+
+.add-code-panel.active {
+    display: block;
+}
+
+.add-code-panel > label {
+    color: #00eaff;
+    font: 800 10px monospace;
+    letter-spacing: 2px;
+}
+
+.add-code-panel h3 {
+    margin: 8px 0 20px;
+    font-size: 22px;
+}
+
+.form-group {
+    margin-bottom: 18px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 7px;
+    color: #aeb8c8;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    background: #080b10;
+    color: #e9eef7;
+    border: 1px solid #293442;
+    border-radius: 9px;
+    padding: 11px 13px;
+    outline: none;
+    font: 13px "Segoe UI", Arial, sans-serif;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: #00eaff;
+}
+
+.form-group select {
+    cursor: pointer;
+}
+
+.form-group textarea {
+    min-height: 280px;
+    resize: vertical;
+    font: 13px/1.7 Consolas, "Courier New", monospace;
+    tab-size: 4;
+}
+
+.form-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.add-code-panel .password-message {
+    display: block;
+    margin-top: 12px;
+}
+
+@media (max-width: 850px) {
+    .school-actions {
+        flex-direction: column;
+        align-items: stretch;
+        width: 100%;
+    }
+
+    .school-actions .btn {
+        width: 100%;
+    }
+}
+
+
+/* =========================
+   BOTÓN ELIMINAR CÓDIGO
+========================= */
+
+.code-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.delete-code-btn {
+    width: 34px;
+    height: 34px;
+
+    display: grid;
+    place-items: center;
+
+    background: #161c25;
+    border: 1px solid #303b4b;
+    border-radius: 8px;
+
+    cursor: pointer;
+
+    font-size: 14px;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.delete-code-btn:hover {
+    background: #35151f;
+    border-color: #ff4f78;
+    transform: scale(1.05);
+}
+
+.delete-code-btn:disabled {
+    opacity: 0.5;
+    cursor: wait;
 }
