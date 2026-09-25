@@ -32,6 +32,7 @@ body {
     background: #00eaff;
     top: -180px;
     left: -150px;
+    
 }
 
 .b {
@@ -83,13 +84,19 @@ nav {
 }
 
 nav a {
-    text-decoration: none;
     color: #528af1;
-    font-size: 13px;
+    text-decoration: none;
+    border: 1px solid #3171d1;
+    border-radius: 9px;
+    padding: 10px 15px;
+    font-weight: 800;
+    align-items: center;
+    margin: auto;
+    display: block;
 }
 
 nav a:hover {
-    color: #00eaff;
+    color: #3700ff;
 }
 
 /* =========================
@@ -616,11 +623,6 @@ footer b {
 .school-header h3 {
     margin: 5px 0 0;
     font-size: 26px;
-}
-
-.school-header .btn {
-    margin: 0;
-    cursor: pointer;
 }
 
 .school-grid {
