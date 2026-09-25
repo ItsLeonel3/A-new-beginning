@@ -1,0 +1,7 @@
+name = "leobay-school"
+main = "worker.js"
+compatibility_date = "2026-08-28"
+
+[vars]
+GITHUB_OWNER = "leobay23"
+GITHUB_REPO = "leobay-projects"
