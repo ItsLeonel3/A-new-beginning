@@ -13,6 +13,7 @@
     <div class="glow b"></div>
 
     <header>
+        <a class="brand" href="index.html"><b>LEO</b>BAY23</a>
         <nav>
             <a href="index.html">Inicio</a>
         </nav>
@@ -110,6 +111,87 @@
                 </form>
             </div>
 
+            <div id="editReleasePanel" class="card add-project-panel">
+                <label>EDITAR RELEASE</label>
+
+                <h3>Editar archivo comprimido</h3>
+
+                <p class="form-help">
+                    Modificá el título, descripción, versión y archivo de esta GitHub Release.
+                </p>
+
+                <form id="editReleaseForm">
+                    <div class="form-group">
+                        <label for="editReleaseTitle">Título</label>
+                        <input
+                            id="editReleaseTitle"
+                            type="text"
+                            placeholder="Ej: TP1 — Abstracción y clases abstractas"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editReleaseDescription">Descripción</label>
+                        <textarea
+                            id="editReleaseDescription"
+                            class="project-description-input"
+                            placeholder="Descripción del proyecto..."
+                            rows="4"
+                        ></textarea>
+                    </div>
+
+                    <div class="project-form-grid">
+                        <div class="form-group">
+                            <label for="editReleaseVersion">Versión</label>
+                            <input
+                                id="editReleaseVersion"
+                                type="text"
+                                placeholder="Ej: 1.0.0"
+                                required
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label for="editReleaseFile">Archivo comprimido</label>
+                            <input
+                                id="editReleaseFile"
+                                type="file"
+                                accept=".zip,.rar,.7z,application/zip,application/x-rar-compressed,application/x-7z-compressed"
+                                required
+                            >
+                        </div>
+                    </div>
+
+                    <div class="selected-file" id="editReleaseSelectedFile">
+                        Ningún archivo seleccionado.
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editReleasePassword">Contraseña de administrador</label>
+                        <input
+                            id="editReleasePassword"
+                            type="password"
+                            placeholder="Ingresá la contraseña de administrador..."
+                            autocomplete="current-password"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-actions">
+                        <button class="btn cyan" type="submit" id="saveEditRelease">
+                            Guardar cambios
+                        </button>
+
+                        <button class="btn" type="button" id="cancelEditRelease">
+                            Cancelar
+                        </button>
+                    </div>
+
+                    <span id="editReleaseMessage" class="password-message"></span>
+                </form>
+            </div>
+
             <div id="projectStatus" class="card project-status">
                 Cargando proyectos...
             </div>
@@ -117,6 +199,11 @@
             <div id="projectGrid" class="project-grid"></div>
         </section>
     </main>
+
+    <footer>
+        <b>LEOBAY23</b>
+    </footer>
+
     <script src="js/config.js"></script>
     <script src="js/private.js"></script>
 </body>

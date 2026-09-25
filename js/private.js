@@ -236,6 +236,59 @@ const projectFile =
         "projectFile"
     );
 
+const editReleasePanel =
+    document.getElementById(
+        "editReleasePanel"
+    );
+
+const editReleaseForm =
+    document.getElementById(
+        "editReleaseForm"
+    );
+
+const editReleaseTitle =
+    document.getElementById(
+        "editReleaseTitle"
+    );
+
+const editReleaseDescription =
+    document.getElementById(
+        "editReleaseDescription"
+    );
+
+const editReleaseVersion =
+    document.getElementById(
+        "editReleaseVersion"
+    );
+
+const editReleaseFile =
+    document.getElementById(
+        "editReleaseFile"
+    );
+
+const editReleaseSelectedFile =
+    document.getElementById(
+        "editReleaseSelectedFile"
+    );
+
+const editReleasePassword =
+    document.getElementById(
+        "editReleasePassword"
+    );
+
+const cancelEditRelease =
+    document.getElementById(
+        "cancelEditRelease"
+    );
+
+const editReleaseMessage =
+    document.getElementById(
+        "editReleaseMessage"
+    );
+
+let editingReleaseId = null;
+
+
 /* =========================
    ABRIR PANEL
 ========================= */
@@ -245,6 +298,10 @@ if (addProjectButton) {
     addProjectButton.addEventListener(
         "click",
         () => {
+
+            if (editReleasePanel) {
+                editReleasePanel.classList.remove("active");
+            }
 
             addProjectPanel.classList.toggle(
                 "active"
@@ -529,6 +586,21 @@ async function loadProjects() {
                             <div class="project-actions">
 
                                 <button
+                                    class="btn"
+                                    type="button"
+                                    onclick="editRelease(
+                                        ${project.id},
+                                        decodeURIComponent('${encodeURIComponent(title)}'),
+                                        decodeURIComponent('${encodeURIComponent(description)}'),
+                                        decodeURIComponent('${encodeURIComponent(project.tag || "")}'),
+                                        decodeURIComponent('${encodeURIComponent(version)}'),
+                                        decodeURIComponent('${encodeURIComponent(assets[0]?.name || "")}')
+                                    )"
+                                >
+                                    ✏️ Editar Release
+                                </button>
+
+                                <button
                                     class="delete-project"
                                     type="button"
                                     onclick="deleteProject(
@@ -662,6 +734,248 @@ async function downloadProject(
 /* =========================
    ELIMINAR PROYECTO
 ========================= */
+
+function editRelease(
+    projectId,
+    currentTitle,
+    currentDescription,
+    currentTag,
+    currentVersion,
+    currentAssetName
+) {
+    if (!editReleasePanel || !editReleaseForm) {
+        return;
+    }
+
+    editingReleaseId = projectId;
+
+    if (addProjectPanel) {
+        addProjectPanel.classList.remove("active");
+    }
+
+    editReleaseTitle.value = currentTitle || "";
+    editReleaseDescription.value = currentDescription || "";
+    editReleaseVersion.value = currentVersion || "";
+    editReleasePassword.value = "";
+    editReleaseFile.value = "";
+
+    if (editReleaseSelectedFile) {
+        editReleaseSelectedFile.textContent =
+            currentAssetName
+                ? `Archivo actual: ${currentAssetName}`
+                : "Ningún archivo seleccionado.";
+    }
+
+    if (editReleaseMessage) {
+        editReleaseMessage.textContent = "";
+    }
+
+    editReleasePanel.classList.add("active");
+
+    editReleasePanel.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+    });
+
+    editReleaseTitle.focus();
+}
+
+if (cancelEditRelease) {
+    cancelEditRelease.addEventListener(
+        "click",
+        () => {
+            editingReleaseId = null;
+
+            if (editReleaseForm) {
+                editReleaseForm.reset();
+            }
+
+            if (editReleaseSelectedFile) {
+                editReleaseSelectedFile.textContent =
+                    "Ningún archivo seleccionado.";
+            }
+
+            if (editReleaseMessage) {
+                editReleaseMessage.textContent = "";
+            }
+
+            if (editReleasePanel) {
+                editReleasePanel.classList.remove("active");
+            }
+        }
+    );
+}
+
+if (editReleaseFile) {
+    editReleaseFile.addEventListener(
+        "change",
+        () => {
+            const file =
+                editReleaseFile.files[0];
+
+            if (!file) {
+                editReleaseSelectedFile.textContent =
+                    "Ningún archivo seleccionado.";
+                return;
+            }
+
+            editReleaseSelectedFile.textContent =
+                `${file.name} — ${formatSize(file.size)}`;
+        }
+    );
+}
+
+if (editReleaseForm) {
+    editReleaseForm.addEventListener(
+        "submit",
+        async event => {
+            event.preventDefault();
+
+            if (!editingReleaseId) {
+                return;
+            }
+
+            const title =
+                editReleaseTitle.value.trim();
+
+            const description =
+                editReleaseDescription.value.trim();
+
+            const version =
+                editReleaseVersion.value.trim();
+
+            const file =
+                editReleaseFile.files[0];
+
+            const adminPassword =
+                editReleasePassword.value;
+
+            if (!title) {
+                alert("Ingresá un título.");
+                editReleaseTitle.focus();
+                return;
+            }
+
+            if (!version) {
+                alert("Ingresá una versión.");
+                editReleaseVersion.focus();
+                return;
+            }
+
+            if (!file) {
+                alert("Seleccioná el nuevo archivo comprimido.");
+                editReleaseFile.focus();
+                return;
+            }
+
+            const filename =
+                file.name.toLowerCase();
+
+            if (
+                !filename.endsWith(".zip") &&
+                !filename.endsWith(".rar") &&
+                !filename.endsWith(".7z")
+            ) {
+                alert("Solo se permiten archivos ZIP, RAR o 7Z.");
+                return;
+            }
+
+            if (!adminPassword) {
+                alert("Ingresá la contraseña de administrador.");
+                editReleasePassword.focus();
+                return;
+            }
+
+            const formData = new FormData();
+
+            formData.append("title", title);
+            formData.append("description", description);
+            formData.append("version", version);
+            formData.append("file", file);
+            formData.append("adminPassword", adminPassword);
+
+            const saveButton =
+                document.getElementById(
+                    "saveEditRelease"
+                );
+
+            try {
+                if (saveButton) {
+                    saveButton.disabled = true;
+                    saveButton.textContent = "Guardando...";
+                }
+
+                if (editReleaseMessage) {
+                    editReleaseMessage.textContent =
+                        "Guardando cambios...";
+                }
+
+                const response =
+                    await api(
+                        `/api/projects/${editingReleaseId}`,
+                        {
+                            method: "PATCH",
+                            body: formData
+                        }
+                    );
+
+                if (!response) {
+                    return;
+                }
+
+                const data =
+                    await response
+                        .json()
+                        .catch(() => ({}));
+
+                if (!response.ok) {
+                    if (editReleaseMessage) {
+                        editReleaseMessage.textContent =
+                            data.error ||
+                            "No se pudo modificar la Release.";
+                    }
+
+                    return;
+                }
+
+                alert(
+                    "Release modificada correctamente."
+                );
+
+                editingReleaseId = null;
+                editReleaseForm.reset();
+
+                if (editReleaseSelectedFile) {
+                    editReleaseSelectedFile.textContent =
+                        "Ningún archivo seleccionado.";
+                }
+
+                if (editReleasePanel) {
+                    editReleasePanel.classList.remove("active");
+                }
+
+                await loadProjects();
+
+            } catch (error) {
+                console.error(
+                    "Error editando Release:",
+                    error
+                );
+
+                if (editReleaseMessage) {
+                    editReleaseMessage.textContent =
+                        "No se pudo conectar con el servidor.";
+                }
+
+            } finally {
+                if (saveButton) {
+                    saveButton.disabled = false;
+                    saveButton.textContent = "Guardar cambios";
+                }
+            }
+        }
+    );
+}
 
 async function deleteProject(
     projectId
