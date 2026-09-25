@@ -1,613 +1,1026 @@
 const API_URL =
-"https://leobay-school.leonelbayon268.workers.dev";
+    "https://leobay-school.leonelbayon268.workers.dev";
 
 const TOKEN_KEY = "school_token";
 
 /* =========================
-UTILIDADES
+   UTILIDADES
 ========================= */
 
 function getToken() {
-return localStorage.getItem(TOKEN_KEY);
+    return localStorage.getItem(TOKEN_KEY);
 }
 
 function logout() {
-localStorage.removeItem(TOKEN_KEY);
-location.href = "login.html";
+    localStorage.removeItem(TOKEN_KEY);
+    location.href = "login.html";
 }
 
 function escapeHTML(text) {
-const div = document.createElement("div");
-div.textContent = text ?? "";
-return div.innerHTML;
+    const div = document.createElement("div");
+    div.textContent = text ?? "";
+    return div.innerHTML;
 }
 
 function formatSize(bytes) {
-if (!bytes) return "0 B";
+    if (!bytes || bytes <= 0) {
+        return "0 B";
+    }
 
-const units = ["B", "KB", "MB", "GB"];
-let size = bytes;
-let i = 0;
+    const units = ["B", "KB", "MB", "GB"];
 
-while (size >= 1024 && i < units.length - 1) {
-    size /= 1024;
-    i++;
+    let size = Number(bytes);
+    let index = 0;
+
+    while (
+        size >= 1024 &&
+        index < units.length - 1
+    ) {
+        size /= 1024;
+        index++;
+    }
+
+    return `${size.toFixed(index === 0 ? 0 : 2)} ${units[index]}`;
 }
 
-return `${size.toFixed(i ? 2 : 0)} ${units[i]}`;
+function formatDate(date) {
+    if (!date) {
+        return "Sin fecha";
+    }
 
+    const parsed = new Date(date);
+
+    if (Number.isNaN(parsed.getTime())) {
+        return "Sin fecha";
+    }
+
+    return parsed.toLocaleDateString("es-AR", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric"
+    });
 }
 
 /* =========================
-API
+   API
 ========================= */
 
 async function api(endpoint, options = {}) {
+    const token = getToken();
 
-const token = getToken();
-
-if (!token) {
-    logout();
-    return null;
-}
-
-const response = await fetch(
-    API_URL + endpoint,
-    {
-        ...options,
-        headers: {
-            ...(options.headers || {}),
-            Authorization: `Bearer ${token}`
-        }
+    if (!token) {
+        logout();
+        return null;
     }
-);
 
-if (response.status === 401) {
-    localStorage.removeItem(TOKEN_KEY);
-    location.href = "login.html";
-    return null;
-}
+    try {
+        const response = await fetch(
+            API_URL + endpoint,
+            {
+                ...options,
 
-return response;
+                headers: {
+                    ...(options.headers || {}),
+                    Authorization: `Bearer ${token}`
+                }
+            }
+        );
 
+        /*
+         * Solamente cerramos sesión si el Worker
+         * realmente rechaza el token.
+         */
+        if (response.status === 401) {
+            localStorage.removeItem(TOKEN_KEY);
+            location.href = "login.html";
+            return null;
+        }
+
+        return response;
+
+    } catch (error) {
+        console.error("Error API:", error);
+        throw error;
+    }
 }
 
 /* =========================
-LOGIN
+   LOGIN
 ========================= */
 
 const loginForm =
-document.getElementById("loginForm");
+    document.getElementById("loginForm");
 
 if (loginForm) {
 
-loginForm.addEventListener(
-    "submit",
-    async event => {
+    loginForm.addEventListener(
+        "submit",
+        async event => {
 
-        event.preventDefault();
+            event.preventDefault();
 
-        const password =
-            document.getElementById(
-                "schoolPassword"
-            ).value;
+            const password =
+                document.getElementById(
+                    "schoolPassword"
+                ).value;
 
-        const message =
-            document.getElementById(
-                "schoolMessage"
-            );
-
-        message.textContent =
-            "Verificando...";
-
-        try {
-
-            const response =
-                await fetch(
-                    API_URL + "/api/login",
-                    {
-                        method: "POST",
-                        headers: {
-                            "Content-Type":
-                                "application/json"
-                        },
-                        body:
-                            JSON.stringify({
-                                password
-                            })
-                    }
+            const message =
+                document.getElementById(
+                    "schoolMessage"
                 );
 
-            const data =
-                await response.json();
-
-            if (!response.ok) {
-
-                message.textContent =
-                    data.error ||
-                    "Contraseña incorrecta.";
-
-                return;
-            }
-
-            if (!data.token) {
-
-                message.textContent =
-                    "El servidor no devolvió un token.";
-
-                return;
-            }
-
-            localStorage.setItem(
-                TOKEN_KEY,
-                data.token
-            );
-
-            location.href =
-                "private.html";
-
-        } catch (error) {
-
-            console.error(error);
-
             message.textContent =
-                "No se pudo conectar con el servidor.";
-        }
-    }
-);
+                "Verificando...";
 
+            try {
+
+                const response =
+                    await fetch(
+                        API_URL + "/api/login",
+                        {
+                            method: "POST",
+
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
+
+                            body:
+                                JSON.stringify({
+                                    password: password
+                                })
+                        }
+                    );
+
+                const data =
+                    await response.json();
+
+                if (!response.ok) {
+
+                    message.textContent =
+                        data.error ||
+                        "Contraseña incorrecta.";
+
+                    return;
+                }
+
+                if (!data.token) {
+
+                    message.textContent =
+                        "El servidor no devolvió un token.";
+
+                    return;
+                }
+
+                localStorage.setItem(
+                    TOKEN_KEY,
+                    data.token
+                );
+
+                location.href =
+                    "private.html";
+
+            } catch (error) {
+
+                console.error(error);
+
+                message.textContent =
+                    "No se pudo conectar con el servidor.";
+            }
+        }
+    );
 }
 
 /* =========================
-PROYECTOS
+   ELEMENTOS DE PROYECTOS
 ========================= */
 
 const projectGrid =
-document.getElementById("projectGrid");
+    document.getElementById("projectGrid");
+
+const projectStatus =
+    document.getElementById("projectStatus");
+
+const addProjectButton =
+    document.getElementById(
+        "addProjectButton"
+    );
+
+const addProjectPanel =
+    document.getElementById(
+        "addProjectPanel"
+    );
+
+const addProjectForm =
+    document.getElementById(
+        "addProjectForm"
+    );
+
+const cancelProject =
+    document.getElementById(
+        "cancelProject"
+    );
+
+const projectMessage =
+    document.getElementById(
+        "projectMessage"
+    );
+
+const selectedFile =
+    document.getElementById(
+        "selectedFile"
+    );
+
+const projectFile =
+    document.getElementById(
+        "projectFile"
+    );
+
+/* =========================
+   ABRIR PANEL
+========================= */
+
+if (addProjectButton) {
+
+    addProjectButton.addEventListener(
+        "click",
+        () => {
+
+            addProjectPanel.classList.toggle(
+                "active"
+            );
+
+            if (
+                addProjectPanel.classList.contains(
+                    "active"
+                )
+            ) {
+
+                document
+                    .getElementById(
+                        "projectTitle"
+                    )
+                    ?.focus();
+            }
+        }
+    );
+}
+
+/* =========================
+   CANCELAR SUBIDA
+========================= */
+
+if (cancelProject) {
+
+    cancelProject.addEventListener(
+        "click",
+        () => {
+
+            addProjectForm.reset();
+
+            addProjectPanel.classList.remove(
+                "active"
+            );
+
+            if (selectedFile) {
+                selectedFile.textContent =
+                    "Ningún archivo seleccionado.";
+            }
+
+            if (projectMessage) {
+                projectMessage.textContent =
+                    "";
+            }
+        }
+    );
+}
+
+/* =========================
+   MOSTRAR ARCHIVO ELEGIDO
+========================= */
+
+if (projectFile) {
+
+    projectFile.addEventListener(
+        "change",
+        () => {
+
+            const file =
+                projectFile.files[0];
+
+            if (!file) {
+
+                selectedFile.textContent =
+                    "Ningún archivo seleccionado.";
+
+                return;
+            }
+
+            selectedFile.textContent =
+                `${file.name} — ${formatSize(file.size)}`;
+        }
+    );
+}
+
+/* =========================
+   CARGAR PROYECTOS
+========================= */
 
 async function loadProjects() {
 
-if (!projectGrid) return;
+    if (!projectGrid) {
+        return;
+    }
 
-projectGrid.innerHTML =
-    "<p>Cargando proyectos...</p>";
+    projectGrid.innerHTML =
+        "<p>Cargando proyectos...</p>";
 
-try {
+    if (projectStatus) {
 
-    const response =
-        await api("/api/projects");
+        projectStatus.textContent =
+            "Cargando proyectos...";
+    }
 
-    if (!response) return;
+    try {
 
-    const data =
-        await response.json();
+        const response =
+            await api("/api/projects");
 
-    if (!response.ok) {
+        if (!response) {
+            return;
+        }
 
-        projectGrid.innerHTML =
-            `<p>${escapeHTML(
+        const data =
+            await response.json();
+
+        if (!response.ok) {
+
+            const errorMessage =
                 data.error ||
-                "No se pudieron cargar los proyectos."
-            )}</p>`;
+                "No se pudieron cargar los proyectos.";
 
-        return;
-    }
+            projectGrid.innerHTML =
+                `<p>${escapeHTML(errorMessage)}</p>`;
 
-    const projects =
-        Array.isArray(data.projects)
-            ? data.projects
-            : [];
+            if (projectStatus) {
+                projectStatus.textContent =
+                    errorMessage;
+            }
 
-    if (!projects.length) {
+            return;
+        }
+
+        const projects =
+            Array.isArray(data.projects)
+                ? data.projects
+                : [];
+
+        if (!projects.length) {
+
+            projectGrid.innerHTML =
+                "<p>No hay proyectos publicados.</p>";
+
+            if (projectStatus) {
+                projectStatus.textContent =
+                    "No hay proyectos publicados.";
+            }
+
+            return;
+        }
+
+        if (projectStatus) {
+
+            projectStatus.textContent =
+                `${projects.length} proyecto(s) disponible(s).`;
+        }
 
         projectGrid.innerHTML =
-            "<p>No hay proyectos publicados.</p>";
+            projects
+                .map(project => {
 
-        return;
-    }
+                    const title =
+                        project.title ||
+                        project.name ||
+                        "Sin título";
 
-    projectGrid.innerHTML =
-        projects.map(project => {
+                    const description =
+                        project.description ||
+                        "Sin descripción.";
 
-            const title =
-                project.title ||
-                project.name ||
-                "Sin título";
+                    const version =
+                        project.version ||
+                        "Sin versión";
 
-            return `
-                <article class="project-card">
+                    const date =
+                        project.created_at ||
+                        project.createdAt ||
+                        project.date ||
+                        project.published_at;
 
-                    <h3>
-                        ${escapeHTML(title)}
-                    </h3>
+                    const assets =
+                        Array.isArray(project.assets)
+                            ? project.assets
+                            : [];
 
-                    <p>
-                        ${escapeHTML(
-                            project.description || ""
-                        )}
-                    </p>
+                    /*
+                     * Si hay varios archivos,
+                     * mostramos todos.
+                     */
 
-                    <div class="project-files">
+                    const filesHTML =
+                        assets.length
+                            ? assets
+                                .map(asset => {
 
-                        ${(project.assets || [])
-                            .map(asset => `
-                                <div class="project-file">
+                                    return `
+                                        <div class="project-file">
 
-                                    <span>
-                                        ${escapeHTML(
-                                            asset.name
-                                        )}
+                                            <div class="project-file-info">
 
-                                        <small>
-                                            ${formatSize(
-                                                asset.size
-                                            )}
-                                        </small>
-                                    </span>
+                                                <strong>
+                                                    ${escapeHTML(
+                                                        asset.name ||
+                                                        "Archivo"
+                                                    )}
+                                                </strong>
 
-                                    <button
-                                        class="btn cyan"
-                                        onclick="downloadProject(
-                                            ${project.id},
-                                            ${asset.id}
-                                        )"
-                                    >
-                                        Descargar
-                                    </button>
+                                                <span>
+                                                    ${formatSize(
+                                                        asset.size
+                                                    )}
+                                                </span>
 
+                                            </div>
+
+                                            <button
+                                                class="btn cyan"
+                                                type="button"
+                                                onclick="downloadProject(
+                                                    ${project.id},
+                                                    ${asset.id}
+                                                )"
+                                            >
+                                                Descargar
+                                            </button>
+
+                                        </div>
+                                    `;
+                                })
+                                .join("")
+                            : `
+                                <p>
+                                    No hay archivos disponibles.
+                                </p>
+                            `;
+
+                    return `
+                        <article class="card project-card">
+
+                            <div class="project-card-top">
+
+                                <div class="project-icon">
+                                    📦
                                 </div>
-                            `)
-                            .join("")}
 
-                    </div>
+                                <span class="project-badge">
+                                    PROJECT
+                                </span>
 
-                    <button
-                        class="delete-project"
-                        onclick="deleteProject(${project.id})"
-                    >
-                        Eliminar
-                    </button>
+                            </div>
 
-                </article>
-            `;
-        }).join("");
+                            <label>
+                                PROYECTO
+                            </label>
 
-} catch (error) {
+                            <h3>
+                                ${escapeHTML(title)}
+                            </h3>
 
-    console.error(error);
+                            <p class="project-description">
+                                ${escapeHTML(description)}
+                            </p>
 
-    projectGrid.innerHTML =
-        "<p>No se pudo conectar con el servidor.</p>";
-}
+                            <div class="project-meta">
 
+                                <span>
+                                    <span>Versión</span>
+                                    <b>
+                                        ${escapeHTML(version)}
+                                    </b>
+                                </span>
+
+                                <span>
+                                    <span>Fecha</span>
+                                    <b>
+                                        ${escapeHTML(
+                                            formatDate(date)
+                                        )}
+                                    </b>
+                                </span>
+
+                            </div>
+
+                            <div class="project-files">
+
+                                ${filesHTML}
+
+                            </div>
+
+                            <div class="project-actions">
+
+                                <button
+                                    class="delete-project"
+                                    type="button"
+                                    onclick="deleteProject(
+                                        ${project.id}
+                                    )"
+                                >
+                                    🗑 Eliminar
+                                </button>
+
+                            </div>
+
+                        </article>
+                    `;
+                })
+                .join("");
+
+    } catch (error) {
+
+        console.error(
+            "Error cargando proyectos:",
+            error
+        );
+
+        projectGrid.innerHTML =
+            "<p>No se pudo conectar con el servidor.</p>";
+
+        if (projectStatus) {
+
+            projectStatus.textContent =
+                "No se pudo conectar con el servidor.";
+        }
+    }
 }
 
 /* =========================
-DESCARGAR
+   DESCARGAR
 ========================= */
 
 async function downloadProject(
-releaseId,
-assetId
+    projectId,
+    assetId
 ) {
 
-try {
+    try {
 
-    const response =
-        await api(
-            `/api/projects/${releaseId}/assets/${assetId}`
-        );
-
-    if (!response) return;
-
-    if (!response.ok) {
-
-        const data =
-            await response.json()
-                .catch(() => ({}));
-
-        alert(
-            data.error ||
-            "No se pudo descargar el archivo."
-        );
-
-        return;
-    }
-
-    const blob =
-        await response.blob();
-
-    const disposition =
-        response.headers.get(
-            "Content-Disposition"
-        );
-
-    let filename =
-        "proyecto";
-
-    if (disposition) {
-
-        const match =
-            disposition.match(
-                /filename="?([^"]+)"?/i
+        const response =
+            await api(
+                `/api/projects/${projectId}/assets/${assetId}`
             );
 
-        if (match) {
-            filename = match[1];
+        if (!response) {
+            return;
         }
+
+        if (!response.ok) {
+
+            const data =
+                await response
+                    .json()
+                    .catch(() => ({}));
+
+            alert(
+                data.error ||
+                "No se pudo descargar el archivo."
+            );
+
+            return;
+        }
+
+        const blob =
+            await response.blob();
+
+        /*
+         * Intentamos obtener el nombre
+         * real enviado por el Worker.
+         */
+
+        const disposition =
+            response.headers.get(
+                "Content-Disposition"
+            );
+
+        let filename =
+            "proyecto";
+
+        if (disposition) {
+
+            const match =
+                disposition.match(
+                    /filename\*?=(?:UTF-8'')?"?([^"]+)"?/i
+                );
+
+            if (match && match[1]) {
+
+                filename =
+                    decodeURIComponent(
+                        match[1]
+                    );
+            }
+        }
+
+        const url =
+            URL.createObjectURL(blob);
+
+        const link =
+            document.createElement("a");
+
+        link.href = url;
+
+        link.download =
+            filename;
+
+        document.body.appendChild(link);
+
+        link.click();
+
+        link.remove();
+
+        URL.revokeObjectURL(url);
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert(
+            "Error al descargar el archivo."
+        );
     }
-
-    const url =
-        URL.createObjectURL(blob);
-
-    const link =
-        document.createElement("a");
-
-    link.href = url;
-    link.download = filename;
-
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-
-    URL.revokeObjectURL(url);
-
-} catch (error) {
-
-    console.error(error);
-
-    alert(
-        "Error al descargar el archivo."
-    );
-}
-
 }
 
 /* =========================
-ELIMINAR
+   ELIMINAR PROYECTO
 ========================= */
 
 async function deleteProject(
-projectId
+    projectId
 ) {
 
-if (
-    !confirm(
-        "¿Eliminar este proyecto?"
-    )
-) {
-    return;
-}
-
-const password =
-    prompt(
-        "Contraseña de administrador:"
-    );
-
-if (!password) return;
-
-try {
-
-    const response =
-        await api(
-            `/api/projects/${projectId}`,
-            {
-                method: "DELETE",
-                headers: {
-                    "Content-Type":
-                        "application/json"
-                },
-                body:
-                    JSON.stringify({
-                        adminPassword:
-                            password
-                    })
-            }
+    const confirmed =
+        confirm(
+            "¿Eliminar este proyecto?\n\n" +
+            "Esta acción no se puede deshacer."
         );
 
-    if (!response) return;
-
-    const data =
-        await response.json();
-
-    if (!response.ok) {
-
-        alert(
-            data.error ||
-            "No se pudo eliminar."
-        );
-
+    if (!confirmed) {
         return;
     }
 
-    alert(
-        "Proyecto eliminado correctamente."
-    );
+    /*
+     * Segunda protección:
+     * contraseña de administrador.
+     */
 
-    loadProjects();
+    const adminPassword =
+        prompt(
+            "Ingresá la contraseña de administrador:"
+        );
 
-} catch (error) {
+    if (!adminPassword) {
+        return;
+    }
 
-    console.error(error);
+    try {
 
-    alert(
-        "Error al eliminar."
-    );
-}
+        const response =
+            await api(
+                `/api/projects/${projectId}`,
+                {
+                    method: "DELETE",
 
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:
+                        JSON.stringify({
+                            adminPassword:
+                                adminPassword
+                        })
+                }
+            );
+
+        if (!response) {
+            return;
+        }
+
+        const data =
+            await response
+                .json()
+                .catch(() => ({}));
+
+        if (!response.ok) {
+
+            alert(
+                data.error ||
+                "No se pudo eliminar el proyecto."
+            );
+
+            return;
+        }
+
+        alert(
+            "Proyecto eliminado correctamente."
+        );
+
+        loadProjects();
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert(
+            "Error al eliminar el proyecto."
+        );
+    }
 }
 
 /* =========================
-SUBIR PROYECTO
+   SUBIR PROYECTO
 ========================= */
 
-const uploadForm =
-document.getElementById(
-"addProjectForm"
-);
+if (addProjectForm) {
 
-if (uploadForm) {
+    addProjectForm.addEventListener(
+        "submit",
+        async event => {
 
-uploadForm.addEventListener(
-    "submit",
-    async event => {
+            event.preventDefault();
 
-        event.preventDefault();
+            const title =
+                document
+                    .getElementById(
+                        "projectTitle"
+                    )
+                    .value
+                    .trim();
 
-        const title =
-            document.getElementById(
-                "projectTitle"
-            ).value.trim();
+            const description =
+                document
+                    .getElementById(
+                        "projectDescription"
+                    )
+                    .value
+                    .trim();
 
-        const description =
-            document.getElementById(
-                "projectDescription"
-            ).value.trim();
+            const version =
+                document
+                    .getElementById(
+                        "projectVersion"
+                    )
+                    .value
+                    .trim();
 
-        const file =
-            document.getElementById(
-                "projectFile"
-            ).files[0];
+            const file =
+                document
+                    .getElementById(
+                        "projectFile"
+                    )
+                    .files[0];
 
-        if (!title || !file) {
-
-            alert(
-                "Completá el título y seleccioná un archivo."
-            );
-
-            return;
-        }
-
-        const filename =
-            file.name.toLowerCase();
-
-        if (
-            !filename.endsWith(".zip") &&
-            !filename.endsWith(".rar") &&
-            !filename.endsWith(".7z")
-        ) {
-
-            alert(
-                "Solo se permiten ZIP, RAR o 7Z."
-            );
-
-            return;
-        }
-
-        const formData =
-            new FormData();
-
-        formData.append(
-            "title",
-            title
-        );
-
-        formData.append(
-            "description",
-            description
-        );
-
-        formData.append(
-            "file",
-            file
-        );
-
-        try {
-
-            const response =
-                await api(
-                    "/api/projects",
-                    {
-                        method: "POST",
-                        body: formData
-                    }
-                );
-
-            if (!response) return;
-
-            const data =
-                await response.json();
-
-            if (!response.ok) {
+            if (!title) {
 
                 alert(
-                    data.error ||
-                    "No se pudo subir el proyecto."
+                    "Ingresá un título."
                 );
 
                 return;
             }
 
-            alert(
-                "Proyecto subido correctamente."
+            if (!file) {
+
+                alert(
+                    "Seleccioná un archivo."
+                );
+
+                return;
+            }
+
+            const filename =
+                file.name.toLowerCase();
+
+            if (
+                !filename.endsWith(".zip") &&
+                !filename.endsWith(".rar") &&
+                !filename.endsWith(".7z")
+            ) {
+
+                alert(
+                    "Solo se permiten archivos ZIP, RAR o 7Z."
+                );
+
+                return;
+            }
+
+            /*
+             * Contraseña de administrador
+             * para publicar el proyecto.
+             */
+
+            const adminPassword =
+                prompt(
+                    "Ingresá la contraseña de administrador:"
+                );
+
+            if (!adminPassword) {
+                return;
+            }
+
+            const formData =
+                new FormData();
+
+            formData.append(
+                "title",
+                title
             );
 
-            uploadForm.reset();
-
-            loadProjects();
-
-        } catch (error) {
-
-            console.error(error);
-
-            alert(
-                "Error al subir el proyecto."
+            formData.append(
+                "description",
+                description
             );
+
+            formData.append(
+                "version",
+                version || "1.0.0"
+            );
+
+            formData.append(
+                "file",
+                file
+            );
+
+            formData.append(
+                "adminPassword",
+                adminPassword
+            );
+
+            const uploadButton =
+                document.getElementById(
+                    "uploadProjectButton"
+                );
+
+            try {
+
+                if (uploadButton) {
+
+                    uploadButton.disabled =
+                        true;
+
+                    uploadButton.textContent =
+                        "Subiendo...";
+                }
+
+                if (projectMessage) {
+
+                    projectMessage.textContent =
+                        "Subiendo proyecto...";
+                }
+
+                const response =
+                    await api(
+                        "/api/projects",
+                        {
+                            method: "POST",
+                            body: formData
+                        }
+                    );
+
+                if (!response) {
+                    return;
+                }
+
+                const data =
+                    await response
+                        .json()
+                        .catch(() => ({}));
+
+                if (!response.ok) {
+
+                    if (projectMessage) {
+
+                        projectMessage.textContent =
+                            data.error ||
+                            "No se pudo subir el proyecto.";
+                    }
+
+                    return;
+                }
+
+                if (projectMessage) {
+
+                    projectMessage.textContent =
+                        "Proyecto subido correctamente.";
+                }
+
+                alert(
+                    "Proyecto subido correctamente."
+                );
+
+                addProjectForm.reset();
+
+                if (selectedFile) {
+
+                    selectedFile.textContent =
+                        "Ningún archivo seleccionado.";
+                }
+
+                addProjectPanel.classList.remove(
+                    "active"
+                );
+
+                loadProjects();
+
+            } catch (error) {
+
+                console.error(
+                    "Error subiendo proyecto:",
+                    error
+                );
+
+                if (projectMessage) {
+
+                    projectMessage.textContent =
+                        "No se pudo conectar con el servidor.";
+                }
+
+                alert(
+                    "Error al subir el proyecto."
+                );
+
+            } finally {
+
+                if (uploadButton) {
+
+                    uploadButton.disabled =
+                        false;
+
+                    uploadButton.textContent =
+                        "Subir archivo";
+                }
+            }
         }
-    }
-);
-
+    );
 }
 
 /* =========================
-LOGOUT
+   CERRAR SESIÓN
 ========================= */
 
-const logoutButton =
-document.getElementById(
-"logoutButton"
-);
+const schoolLock =
+    document.getElementById(
+        "schoolLock"
+    );
 
-if (logoutButton) {
+if (schoolLock) {
 
-logoutButton.addEventListener(
-    "click",
-    event => {
+    schoolLock.addEventListener(
+        "click",
+        event => {
 
-        event.preventDefault();
+            event.preventDefault();
 
-        logout();
-    }
-);
-
+            logout();
+        }
+    );
 }
 
 /* =========================
-INICIO
+   INICIO
 ========================= */
 
 if (loginForm) {
 
-/*
- * Estamos en login.html.
- * No intentamos cargar proyectos.
- */
+    /*
+     * Estamos en login.html.
+     * No hacemos nada más.
+     */
 
 } else if (projectGrid) {
 
-/*
- * Estamos en private.html.
- */
+    /*
+     * Estamos en private.html.
+     */
 
-if (!getToken()) {
+    if (!getToken()) {
 
-    location.replace(
-        "login.html"
-    );
+        location.replace(
+            "login.html"
+        );
 
-} else {
+    } else {
 
-    loadProjects();
-}
-
+        loadProjects();
+    }
 }
