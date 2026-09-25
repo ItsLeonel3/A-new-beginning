@@ -157,6 +157,18 @@ nav a:hover {
     font-size: 13px;
 }
 
+.delete-project{
+    display: inline-block;
+    text-decoration: none;
+    background: #ff4f78;
+    border: 1px solid #ff4f78;
+    border-radius: 9px;
+    padding: 10px 15px;
+    margin: 18px 8px 0 0;
+    font-weight: 800;
+    font-size: 13px;
+}
+
 .btnn {
     display: inline-block;
     text-decoration: none;
@@ -925,5 +937,123 @@ footer b {
     .form-actions .btn {
         width: 100%;
         margin-right: 0;
+    }
+}
+
+/* =========================
+   PROYECTOS DESCARGABLES
+========================= */
+
+.project-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 22px;
+    margin-top: 25px;
+}
+
+.project-card {
+    padding: 24px;
+    background: #0d1219;
+    border: 1px solid #293442;
+    border-radius: 15px;
+    min-width: 0;
+    transition: 0.2s ease;
+}
+
+.project-card:hover {
+    transform: translateY(-3px);
+    border-color: #00eaff;
+    box-shadow: 0 0 25px #00eaff18;
+}
+
+.project-card h3 {
+    margin: 0 0 10px;
+    color: #e9eef7;
+    font-size: 22px;
+}
+
+.project-card > p {
+    margin: 0 0 20px;
+    color: #8f9bad;
+    font-size: 14px;
+}
+
+/* ARCHIVOS */
+
+.project-files {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.project-file {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    padding: 12px 14px;
+    background: #080b10;
+    border: 1px solid #202936;
+    border-radius: 10px;
+}
+
+.project-file span {
+    min-width: 0;
+    color: #dce7f5;
+    font-size: 13px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.project-file button {
+    flex-shrink: 0;
+    padding: 9px 13px;
+    border: 1px solid #00eaff;
+    border-radius: 8px;
+    background: #00eaff;
+    color: #061015;
+    font-weight: 800;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.project-file button:hover {
+    background: #8ff7ff;
+}
+
+/* ELIMINAR */
+
+.delete-project {
+    margin-top: 15px;
+    padding: 8px 12px;
+    border: 1px solid #ff4f78;
+    border-radius: 8px;
+    background: transparent;
+    color: #ff6b8b;
+    font-weight: 700;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.delete-project:hover {
+    background: #35151f;
+    color: #ff9ab0;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 850px) {
+    .project-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .project-file {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .project-file button {
+        width: 100%;
     }
 }
